@@ -1,0 +1,186 @@
+/* 
+    Document   : innovate_style
+    Created on : Mar 26, 2012, 12:53:37 PM
+    Author     : Deewen
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+.innovate_container { 
+    width: 680px; 
+    height: 450px; 
+    margin: 0 auto;
+}
+
+/* css generated from http://www.cssbuttongenerator.com */
+.toggle_button {
+    -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+    background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+    background-color:#ededed;
+    -moz-border-radius:6px;
+    -webkit-border-radius:6px;
+    border-radius:6px;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    color:#777777;
+    font-family:arial;
+    font-size:10px;
+    font-weight:bold;
+    padding:3px 12px;
+    text-decoration:none;
+    text-shadow:1px 1px 0px #ffffff;
+    margin-right:10px;
+    cursor: pointer;
+}.toggle_button:hover, .toggle_button.selected {
+    cursor: pointer;
+    text-decoration: none;
+    -moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+    box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
+    background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
+    background-color:#79bbff;
+    -moz-border-radius:6px;
+    -webkit-border-radius:6px;
+    border-radius:6px;
+    border:1px solid #84bbf3;
+    display:inline-block;
+    color:#ffffff;
+    font-family:arial;
+    font-size:10px;
+    font-weight:bold;
+    padding:3px 12px;
+    text-decoration:none;
+    text-shadow:1px 1px 0px #528ecc;
+}
+
+#innovate_container .mapTitle{
+    font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+    font-size:16px;
+    color:#000;
+    fill:#000;
+    text-align: center;
+    margin : 10px 0px 5px 0px;
+}
+
+
+#innovate_container .innovate_mapFooter{
+    padding: 10px;
+    font-size: 12px;
+    height: auto;
+    min-height: 100px;
+    text-align: left;
+    display:table-cell;
+    vertical-align: middle;
+    font-family: arial;
+}
+
+#innovate_container .innovate_mapFooter div{
+    line-height: 24px;
+}
+
+#innovate_container .coda-slider .panel-wrapper {
+    border: 1px solid #BBBBBB;
+    padding: 5px;
+}
+
+#innovate_container .onecolumngraph {
+    width: 680px;
+}
+
+#innovate_container .olControlScaleLine {
+    position: absolute;
+    width: 120px;
+    left :500px;
+    bottom:28px;
+    font-size: xx-small;
+    background-image: url("../images/transparent.png");
+    background-repeat: repeat;
+    padding:5px;
+    -moz-border-radius: 5px 0px 0px 5px;
+    border-radius: 5px 0px 0px 5px;
+    
+    
+}
+
+
+#innovate_container .innovateGraphFooterBody{
+    padding-left: 4px;
+}
+
+
+#innovate_container th{
+    font-weight: bold;
+}
+
+#innovate_container .olControlAttribution {
+    left: 2px;
+    right: inherit;
+    bottom: 28px;
+    line-height: 11px; 
+}
+
+#innovate_container .innovateGraphFooterBody{
+    display: block;
+    width: 100%;
+}
+
+
+#innovate_container .innovateGraphFooterBody table td{
+    text-align: left;
+    line-height: 20px;
+    font-size: 12px;
+    padding:0px;
+    margin:0px;
+}
+
+#innovate_container .innovateGraphFooterBody table th{
+    text-align: left;
+    line-height: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#innovate_container ul.tools {
+    float:right;
+    width:30px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    padding-right:30px;
+    position: relative;
+}
+
+#innovate_container .olFramedCloudPopupContent,#innovate_container .olFramedCloudPopupContent td,#innovate_container .olFramedCloudPopupContent div{
+    padding: 2px;
+    overflow: auto;
+    font-size: 12px;
+}
+
+.pointerCursor{
+    cursor: pointer;
+}
+
+#innovate_container  .innoToolsCol{
+    float: right;
+    width: 50px;
+    padding-right: 12px;
+}
+
+#coda-nav-1 a.current img{
+    border: 2px solid #428DAD;
+}
+
+.coda-nav a.current{
+    border:0px;
+}
+

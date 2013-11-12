@@ -1,0 +1,134 @@
+<html >
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="http://www.epa.gov/epafiles/templates/webcms/css/epa.css" />
+        <link rel="stylesheet" href="http://app2.erg.com/ROEsystem/public/styles/default.css" />
+        <link rel="stylesheet" href="http://app2.erg.com/ROEsystem/public/styles/jquery.qtip.css" />
+        <link rel="stylesheet" href="styles/innovate_style.css" />
+        <link rel="stylesheet" href="scripts/jquery-ui/css/ui-lightness/jquery-ui.css" />
+
+        <script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers.js"></script>
+        <script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers/Control/InnovateMapTitle.js"></script>
+        <script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers/Control/InnovateMapLegend.js"></script>
+        <script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers/Control/InnovateMapFooter.js"></script>
+        <script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers/Control/InnovateOverlaySwitcher.js"></script>
+        <script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers/Control/InnovateFindAddress.js"></script>
+        
+        
+        
+        
+        <script type="text/javascript" src="scripts/jquery-ui/js/jquery.js"></script>
+        <script type="text/javascript" src="scripts/jquery-ui/js/jquery-ui.js"></script>
+        <script type="text/javascript" src="scripts/jquery-ui/js/jquery.ui.touch-punch.js"></script>
+
+        <script type="text/javascript" src="scripts/map_config.js"></script>
+        <script type="text/javascript" src="scripts/innovate.js"></script>
+        <script type="text/javascript" src="scripts/innovateLayers.js"></script>
+        <script type="text/javascript" src="scripts/innovateControls.js"></script>
+        <script type="text/javascript" src="scripts/innovateMap.js"></script>
+        <script type="text/javascript" src="scripts/innovateOpacitySelector.js"></script>
+
+
+        <script>
+            
+            var getUrlVars = function(){
+                var hash,getParams={};
+                var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                for(var i = 0; i < hashes.length; i++)
+                {
+                    hash = hashes[i].split('=');
+                    getParams[hash[0]] = hash[1];
+                }
+                return getParams;
+            }();
+            
+            
+            var reloadCount = 0;
+            var mapID = getUrlVars["mapId"];
+            var screenWidth = getUrlVars["width"];
+            var screenHeight = getUrlVars["height"];
+            
+            function getQueryVariable(variable) {
+                var query = window.location.search.substring(1);
+                var vars = query.split("&");
+                for (var i=0;i<vars.length;i++) {
+                    var pair = vars[i].split("=");
+                    if (pair[0] == variable) {
+                        return pair[1];
+                    }
+                } 
+                return false;
+            }
+            
+            function renderMap(){
+                reloadCount++;
+                $("#container-map"+mapID).html("");
+                innovate.curMapID = mapID;
+                innovate.buildMap(mapID);
+                innovate.attachEventsForControls();
+                innovate.initializeOpacitySelector(mapID);
+                $("#innovate_container").css({"width":screenWidth,"height":screenHeight});
+                //var userConfig = innovate.getUserConfigForMap(mapID);
+                //var geographic = new OpenLayers.Projection("EPSG:4326");
+                //var mercator = new OpenLayers.Projection(userConfig["projection"]);
+                
+                //if(innovate.openedMap[innovate.curMapID].isArcGisBaseMap){
+                //move the map a bit to cover the blank space 
+                //    innovate.maps[innovate.curMapID].setCenter(new OpenLayers.LonLat(-77, 38).transform(geographic,mercator), 0);
+                //}else{
+                //move the map a bit to cover the blank space 
+                //    innovate.maps[innovate.curMapID].setCenter(new OpenLayers.LonLat(-60, 38).transform(geographic,mercator), 0);
+                //}
+                //fix for ie 7
+                if(innovate.getInternetExplorerVersion()==7 && reloadCount==1)
+                    setTimeout("renderMap()",1000);
+                    
+                if(innovate.getInternetExplorerVersion()==-1){
+                    $("image").each(function(){
+                        $(this).attr("class","pointerCursor");
+                    });
+                }
+            }
+            
+            function resizeMap(screenWidth,screenHeight){
+                $("#container-map"+mapID).css({"width":screenWidth,"height":screenHeight});
+            }
+            
+        </script>
+    </head>
+    <body style="overflow: hidden;">
+        <div id="innovate_container">
+            <div></div>
+        </div>
+        <div id="error_log"></div>
+        <script>
+            
+            
+            $("#innovate_container").children().attr("id","container-map"+mapID);
+            $("#container-map"+mapID).css({"width":screenWidth,"height":screenHeight});
+            setTimeout("renderMap()",500);
+            
+            $(document).keypress(function(event) {
+                var kc = event.which || event.keyCode;
+                if (kc==27 && window.parent.innovate.fullScreenOn) {
+                    window.parent.innovate.closeModal();
+                } 
+            });
+            if(window.parent){
+                $(window.parent).keypress(function(event) {
+                    var kc = event.which || event.keyCode;
+                    if (kc==27 && window.parent && window.parent.innovate.fullScreenOn) {
+                        window.parent.innovate.closeModal();
+                        $(window.parent).keypress(function(event){});
+                    } 
+                });
+            }
+            window.parent.innovate.closeLoadingImage();
+            
+            //var tmpObj = new innovate.findLocation(mapID);
+            //tmpObj.init();
+            
+        </script>
+
+    </body>
+</html>
