@@ -718,11 +718,11 @@ innovate.Controls = function(innovateMapObj) {
                     var imgURL = innovate.mapServiceBaseURL["legend"] + innovateMapObj.config.legend["url"] + "/../0/images/" + img;
                     content = "<div>" + obj['namelsad'] + ", " + initCapedStateName + "</div>" +
                             "<div>Radon risk zone: " + obj['radonzone'] + "</div>" +
-                            "<table style=\"width:420px\height:120px\"><tbody><tr style=\"background-color: #EEEEEE; border-color:#DDDDDD;border-style: solid; border-width: 1px 0 1px 0px;padding: 5px;\"><td valign=\"top\" align=\"center\"><div><img alt=\"\" src=\"" + imgURL + "\"></div></td>" +
+                            "<table style=\"width:380px;height:80px\"><tbody><tr style=\"background-color: #EEEEEE; border-color:#DDDDDD;border-style: solid; border-width: 1px 0 1px 0px;padding: 5px;\"><td valign=\"top\" align=\"center\"><div><img alt=\"\" src=\"" + imgURL + "\"></div></td>" +
                             "<td valign=\"top\" align=\"left\">" + desc + "</td>" +
                             "<td valign=\"top\" align=\"left\">" + priority + "</td></tr></tbody></table>";
 
-                    boxSize = new OpenLayers.Size(450, 120);
+                    boxSize = new OpenLayers.Size(390, 130);
                     if (innovate.popupbox[mapID]) {
 
                         innovate.popupbox[mapID].lonlat = map.getLonLatFromPixel(event.xy);

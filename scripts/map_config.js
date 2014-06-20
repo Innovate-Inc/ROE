@@ -18,8 +18,8 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_fishfaunapercentloss','wms_stateboundariesThick']
-        ,'controls':['Navigation','LayerSwitcher','click_roefishlosspercent','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','click_roefishlosspercent','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
     },{
         'id':2//must match param id
         ,'header':'Reduction in native fish species diversity in the contiguous U.S. from historical levels to 2006'
@@ -38,8 +38,8 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_roefishloss','wms_stateboundaries']
-        ,'controls':['Navigation','LayerSwitcher','click_roefishloss','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','click_roefishloss','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
     },{
         'id':3//must match param id
         ,'header':'Changes in absolute sea level along U.S. coasts, 1993-2011'
@@ -59,8 +59,8 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_sea_level_absolute']
-        ,'controls':['Navigation','LayerSwitcher','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
     },{
         'id':4//must match param id
         ,'header':'Annual precipitation anomalies in the U.S. by region, 1901-2012'
@@ -80,8 +80,8 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_precipitation','wms_stateboundaries']
-        ,'controls':['Navigation','LayerSwitcher','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
     },{
         'id':5//must match param id
         ,'header':'Annual temperature anomalies in the U.S. by region, 1901-2012'
@@ -101,8 +101,8 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_temperature','wms_stateboundaries']
-        ,'controls':['Navigation','LayerSwitcher','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
     },{
         'id':6//must match param id
         ,'header':'Changes in relative sea level along U.S. coasts, 1960-2012'
@@ -122,8 +122,8 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_sea_level_relative']
-        ,'controls':['Navigation','LayerSwitcher','click_sealevelrelative','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','click_sealevelrelative','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
     },{
         'id':7//must match param id
         ,'header':'Land cover of the contiguous U.S., based on 2006 NLCD'
@@ -141,8 +141,8 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_nlcd','wms_stateboundaries']
-        ,'controls':['Navigation','LayerSwitcher','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
     },{
         'id':8//must match param id
         ,'header':'EPA map of radon zones'
@@ -160,8 +160,8 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_radons','wms_stateboundariesThick']
-        ,'controls':['Navigation','LayerSwitcher','click_radons','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','click_radons','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
     } 
     ,{
         'id':9//must match param id
@@ -182,8 +182,8 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_longislandhypoxia']
-        ,'controls':['Navigation','LayerSwitcher','click_longislandhypoxia','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','click_longislandhypoxia','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
     }
     ,{
         'id':10//must match param id
@@ -202,8 +202,8 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_acidsensitivewaters','wms_stateboundaries']
-        ,'controls':['Navigation','LayerSwitcher','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
     }
     ,{
         'id':11//must match param id
@@ -220,10 +220,10 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_wetnitratedeposition1989-1991','wms_wetnitratedeposition2009-2011','wms_stateboundaries']
-        ,'controls':['Navigation','LayerSwitcher','InnovateMapFullScreen','ScaleLine','InnovateOverlaySwitcher','Attribution','InnovateMapLegend']
+        ,'controls':['LayerSwitcher','InnovateMapFullScreen','ScaleLine','InnovateOverlaySwitcher','Attribution','InnovateMapLegend']
         ,'overlaySwitcherRefreshDuration' : 50
         ,'overlaySwitcherLayers' : ['wms_wetnitratedeposition1989-1991','wms_wetnitratedeposition2009-2011']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'hide_controls':['PanZoomBar']
     },{
         'id':13//must match param id
         ,'header':'Wet Sulfate Deposition'
@@ -239,10 +239,10 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_wetsulfatedeposition1989-1991','wms_wetsulfatedeposition2009-2011','wms_stateboundaries']
-        ,'controls':['Navigation','LayerSwitcher','InnovateMapFullScreen','ScaleLine','InnovateOverlaySwitcher','Attribution','InnovateMapLegend']
+        ,'controls':['LayerSwitcher','InnovateMapFullScreen','ScaleLine','InnovateOverlaySwitcher','Attribution','InnovateMapLegend']
          ,'overlaySwitcherRefreshDuration' : 200
          ,'overlaySwitcherLayers' : ['wms_wetsulfatedeposition1989-1991','wms_wetsulfatedeposition2009-2011']
-         ,'hide_controls':['Navigation','PanZoomBar']
+         ,'hide_controls':['PanZoomBar']
     },{
         'id':15//must match param id
         ,'header':'Total nitrogen deposition in the contiguous U.S.'
@@ -260,8 +260,8 @@ var innovate_config = {
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_totalnitrogendeposition1989-1991','wms_totalnitrogendeposition2009-2011']
         ,'initialDisplayLayer':1
-        ,'controls':['Navigation','LayerSwitcher','InnovateMapFullScreen','ScaleLine','click_nitrogenDeposition','InnovateOverlaySwitcher','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','InnovateMapFullScreen','ScaleLine','click_nitrogenDeposition','InnovateOverlaySwitcher','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
         ,'overlaySwitcherRefreshDuration' : 50
     },{
         'id':17//must match param id
@@ -280,8 +280,8 @@ var innovate_config = {
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_totalsulfurdeposition1989-1991','wms_totalsulfurdeposition2009-2011']
         ,'initialDisplayLayer':1
-        ,'controls':['Navigation','LayerSwitcher','InnovateMapFullScreen','click_sulfurDeposition','InnovateOverlaySwitcher','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','InnovateMapFullScreen','click_sulfurDeposition','InnovateOverlaySwitcher','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
         ,'overlaySwitcherRefreshDuration' : 50
     },{
         'id':18//must match param id
@@ -299,8 +299,8 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_ecologicalhubsandcorridors']
-        ,'controls':['Navigation','LayerSwitcher','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
     },{
         'id':19//must match param id
         ,'header':'Gulf Of Mexico Hypoxia 2012'
@@ -319,8 +319,8 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_gulfofmexicohypoxia']
-        ,'controls':['Navigation','LayerSwitcher','click_GulfOfMexicoHypoxia','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','click_GulfOfMexicoHypoxia','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
     },{
         'id':20//must match param id
         ,'header':'Changes in relative sea level along U.S. coasts, 1960-2012'
@@ -340,8 +340,8 @@ var innovate_config = {
         }
         ,'baseMap' : ['bingWithoutWrap','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_sea_level_relative']
-        ,'controls':['Navigation','LayerSwitcher','click_sealevelrelative','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','click_sealevelrelative','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
     }
   ,{
         'id':21//must match param id
@@ -362,8 +362,8 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_biomasspersquaremile','wms_stateboundariesThick']
-        ,'controls':['Navigation','LayerSwitcher','click_biomasspersquaremile','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','click_biomasspersquaremile','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
     } ,{
         'id':22//must match param id
         ,'header':'Percent change in carbon stored in U.S. forests, by county, 1990-2013'
@@ -383,8 +383,8 @@ var innovate_config = {
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
         ,'layers':['wms_percentchangecarbonstorage','wms_stateboundariesThick']
-        ,'controls':['Navigation','LayerSwitcher','click_perchangecarbonstoreage','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
-        ,'hide_controls':['Navigation','PanZoomBar']
+        ,'controls':['LayerSwitcher','click_perchangecarbonstoreage','InnovateMapFullScreen','ScaleLine','Attribution','InnovateMapLegend']
+        ,'hide_controls':['PanZoomBar']
     } 
 ]
 };

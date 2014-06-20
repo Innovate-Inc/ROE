@@ -57,22 +57,22 @@ innovate.opacitySelector = function(mapId){
     }
     /*
      * Do slide up animation to view the legend information of a map
-     * Also set the opacity of map layers to 1 -  as requested by client
+     * Also set the opacity of map layers to 1 -  as requested by client; * 11.20.13 client requested opacity not change when legend is toggled    
      */
     this.legendOpen= function(){
         this.enableActivateControl = false;
-        $("#innovate_opacitySelector_"+mapId).slider( "option" , "value" , 1);
-        this.setOverlayOpacity(1);
+        $("#innovate_opacitySelector_"+mapId).slider( "option" , "value" , this.currentValue);
+        //this.setOverlayOpacity(1);
         this.enableActivateControl = true;
     }
     /*
      * Do slide down animation to hide the legend information of a map
-     * Also set the opacity of map layers to what was set before(before being set to 1 by legendOpen function) -  as requested by client
+     * Also set the opacity of map layers to what was set before(before being set to 1 by legendOpen function) -  as requested by client; * 11/20/13 client requested opacity not change when legendi is toggled
      */
     this.legendClose = function(){
         if(this.currentValue==1){
             this.setOverlayOpacity(this.previousValue);
-            $("#innovate_opacitySelector_"+mapId).slider( "option" , "value" , this.previousValue);
+            $("#innovate_opacitySelector_"+mapId).slider( "option" , "value" , this.currentValue);
         }
     }
     
