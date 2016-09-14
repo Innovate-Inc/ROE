@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
     <!-- EPA Template, OneEPA Web, 17 November 2010 -->
     <head>
@@ -40,6 +40,13 @@
         <link rel="alternate" type="application/atom+xml" title="Greenversations, EPA's Blog" href="http://blog.epa.gov/blog/feed/" />
 
         <!-- ALL PAGE STYLES BELOW THIS LINE -->
+
+        <!-- Innovate Add ESRI API CSS Begin -->
+        <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/dojo/dijit/themes/soria/soria.css">
+        <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/dojo/dojox/layout/resources/ExpandoPane.css">
+        <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/esri/css/esri.css">
+        <!-- Innovate Add ESRI API CSS End -->
+
         <link rel="stylesheet" href="http://www.epa.gov/epafiles/templates/webcms/css/epa.css" type="text/css" />
         <link rel="stylesheet" href="http://app2.erg.com/ROEsystem_tmp/public/styles/default.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="http://app2.erg.com/ROEsystem_tmp/public/styles/print.css" type="text/css" media="print" />
@@ -57,6 +64,9 @@
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/jquery-ui.min.js"></script>
 
         <!-- Mapping scripts -->
+        <!-- Innovate Reference to ESRI API Begin -->
+        <script type="text/javascript" src="http://js.arcgis.com/3.9/"></script>
+        <!-- Innovate Reference to ESRI API Begin -->
         <script type="text/javascript" src="http://app2.erg.com/ROEsystem_tmp/public/scripts/jquery.blockUI.js"></script>
         <script type="text/javascript" src="http://app2.erg.com/ROEsystem_tmp/public/scripts/jquery.ui.touch-punch.js"></script>
         <script type="text/javascript" src="http://app2.erg.com/ROEsystem_tmp/public/scripts/OpenLayers/lib/OpenLayers.js"></script>
@@ -647,7 +657,38 @@
                                                 * div#footnotes-mapN where N is the id of the map - must match with the mapID provided above while creating the links 
                                                 -->
                                                 <div class="mapTitle"></div>
-                                                <div id="container-map1" class="innovate_container"></div>
+                                                <div id="container-map1" class="innovate_container">
+
+                                                    <!--INNOVATE STANDALONE DEMO START-->
+                                                    <!--<div id="mframe" data-dojo-type="dijit/layout/BorderContainer"
+                                                         data-dojo-props="design:'headline', gutters:true">
+
+                                                        <div data-dojo-type="dojox/layout/ExpandoPane"
+                                                             data-dojo-props="duration:300,  region:'bottom', maxHeight:'160px', easeIn:'easing.linear', easeOut:'easing.linear'"
+                                                             style="height: 160px; font-size: x-small">
+                                                            <div id="slider">Opacity</div>
+                                                            <div id="legendDiv"></div>
+                                                        </div>
+                                                        <div id="fullScreen"><img id="fullScreenIcon" src="./scripts/innovate/images/icon_fullscreen.gif" /></div>
+                                                        <div id="expandIcon"><img id="exIcon" src="./scripts/innovate/images/greenPlus2.gif" style="width:14px; height:14px" /></div>
+                                                        <div id="layersNode" style="display: none">
+                                                            Base Layer:<span>
+                                                                <br />
+                                                                <input type='radio' name="blayer" id='blayer0Radio' value=0 checked="true" />Aerial Imagery<br />
+                                                                <input type='radio' name="blayer" id='blayer1Radio' value=1 />World Light Gray Base
+                                                            </span><br />
+                                                            Overlays: <span id="layer_list">
+                                                                <br />
+                                                                <input type='checkbox' checked='True' class='list_item' id='layer0CheckBox' value=0 />States<br />
+                                                                <input type='checkbox' checked='True' class='list_item' id='layer1CheckBox' value=1 />Radon Zones
+                                                            </span><br />
+                                                        </div>
+                                                        <div id="mapDiv" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
+                                                        </div>
+
+                                                    </div>-->
+                                                    <!--INNOVATE STANDALONE DEMO END-->
+                                                </div>
                                                 <div id="footnotes-map1" class="innovate-footnotes"></div>
                                             </div>
                                             <div class="innoToolsCol">   

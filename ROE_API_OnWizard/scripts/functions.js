@@ -11,7 +11,7 @@ $(document).ready(function() {
 		activeClass: 'selected' 
 	});
 	
-	// Tooltips to indicator tools
+	 //Tooltips to indicator tools
 	$('.tools a[title]').qtip({
 		position: {
 			my:	'right center',

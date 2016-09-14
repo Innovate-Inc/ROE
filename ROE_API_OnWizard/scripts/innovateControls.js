@@ -699,15 +699,15 @@ innovate.Controls = function(innovateMapObj) {
                     if (obj['radonzone'] == 1) {
                         desc = "<b>Zone 1 </b>counties have a predicted average indoor radon screening level greater than 4 pCi/L (picocuries per liter) <b>(red zones)</b>";
                         priority = "<b>Highest Potential</b>";
-                        img = "3b6a386668a6d07b8d8e029744820282";
+                        img = "7222a20623b288194ba3a4929f4a9610";
                     } else if (obj['radonzone'] == 2) {
                         desc = "<b>Zone 2 </b>counties have a predicted average indoor radon screening level between 2 and 4 pCi/L <b>(orange zones)</b>";
                         priority = "<b>Moderate Potential</b>";
-                        img = "52edb92fef3b3447d910ea3f4e3bad06";
+                        img = "0af36609991455aceba15b73b91ce066";
                     } else if (obj['radonzone'] == 3) {
                         desc = "<b>Zone 3 </b>counties have a predicted average indoor radon screening level less than 2 pCi/L <b>(yellow zones)</b>";
                         priority = "<b>Low Potential</b>";
-                        img = "d1573b09a0505bef245b2a380a18e380";
+                        img = "77ea99fb7956be59e6314b0eb1ddefe3";
                     }
                     var stateName = obj['statename'], initCapedStateName = "";
                     stateName = stateName.split(" ");

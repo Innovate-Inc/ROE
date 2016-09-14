@@ -41,6 +41,13 @@
         <link rel="alternate" type="application/atom+xml" title="Greenversations, EPA's Blog" href="http://blog.epa.gov/blog/feed/" />
 
         <!-- ALL PAGE STYLES BELOW THIS LINE -->
+		<!-- Innovate Add ESRI API CSS Begin -->
+		<link rel="stylesheet" href="http://js.arcgis.com/3.9/js/dojo/dijit/themes/soria/soria.css">
+		<link rel="stylesheet" href="http://js.arcgis.com/3.9/js/dojo/dojox/layout/resources/ExpandoPane.css">
+		<link rel="stylesheet" href="http://js.arcgis.com/3.9/js/esri/css/esri.css">
+		<link rel="stylesheet" href="scripts/innovate/innovate.css" type="text/css">
+		<!-- Innovate Add ESRI API CSS End -->
+
         <link rel="stylesheet" href="http://www.epa.gov/epafiles/templates/webcms/css/epa.css" type="text/css" />
         <link rel="stylesheet" href="http://app2.erg.com/ROEsystem/public/styles/default.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="http://app2.erg.com/ROEsystem/public/styles/print.css" type="text/css" media="print" />
@@ -59,20 +66,24 @@
         <!-- Mapping scripts -->
         <script type="text/javascript" src="scripts/jquery.blockUI.js"></script>
         <script type="text/javascript" src="scripts/jquery.ui.touch-punch.js"></script>
-        <script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers.js"></script>
-        <script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers/Control/InnovateMapTitle.js"></script>
-        <script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers/Control/InnovateMapLegend.js"></script>
-        <script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers/Control/InnovateMapFooter.js"></script>
-        <script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers/Control/InnovateMapFullScreen.js"></script>
-        <script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers/Control/InnovateOverlaySwitcher.js"></script>
-        <script type="text/javascript" src="scripts/map_config.js"></script>
-        <script type="text/javascript" src="scripts/innovate.js"></script>
-        <script type="text/javascript" src="scripts/innovateControls.js"></script>
-        <script type="text/javascript" src="scripts/innovateLayers.js"></script>
-        <script type="text/javascript" src="scripts/innovateMap.js"></script>
+        <!--<script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers.js"></script>-->
+        <!--<script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers/Control/InnovateMapTitle.js"></script>-->
+        <!--<script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers/Control/InnovateMapLegend.js"></script>-->
+        <!--<script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers/Control/InnovateMapFooter.js"></script>-->
+        <!--<script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers/Control/InnovateMapFullScreen.js"></script>-->
+        <!--<script type="text/javascript" src="scripts/OpenLayers/lib/OpenLayers/Control/InnovateOverlaySwitcher.js"></script>-->
+        <script type="text/javascript" src="scripts/innovate/map_config.js"></script>
+        <script type="text/javascript" src="scripts/innovate/innovate.js"></script>
+        <!--<script type="text/javascript" src="scripts/innovateControls.js"></script>-->
+        <!--<script type="text/javascript" src="scripts/innovateLayers.js"></script>-->
+        <script type="text/javascript" src="scripts/innovate/innovateMap.js"></script>
         <script type="text/javascript" src="scripts/innovateOpacitySelector.js"></script>
+		<!--<script type="text/javascript" src="scripts/innovate2.js"></script>-->
 
+		
         <!-- /Mapping scripts -->
+		<script type="text/javascript" src="http://js.arcgis.com/3.9/"></script>
+		<script type="text/javascript" src="http://app2.erg.com/ROEsystem/public/scripts/jquery.qtip.min.js"></script>
 
         <!-- Chart scripts -->
         <script type="text/javascript" src="http://app2.erg.com/ROEsystem/public/scripts/parsing.js"></script>
@@ -1051,7 +1062,7 @@
         <!--<script src="http://www.epa.gov/epafiles/js/epa-core-v4.js"></script>--><!--used with EPA's jQuery, causes error when EPA jQuery version not used-->
 
 
-        <script type="text/javascript" src="http://app2.erg.com/ROEsystem/public/scripts/jquery.qtip.min.js"></script>
+        
         <script type="text/javascript" src="http://app2.erg.com/ROEsystem/public/scripts/jquery.tabify.js"></script>
         <script type="text/javascript" src="http://app2.erg.com/ROEsystem/public/scripts/jquery.coda-slider-2.0.js"></script>
         <script type="text/javascript" src="http://app2.erg.com/ROEsystem/public/scripts/jquery.easing.1.3.js"></script>
