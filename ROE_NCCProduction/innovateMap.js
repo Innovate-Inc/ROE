@@ -391,9 +391,9 @@ innovate.Map = function(mapID){
               //parser.parse(dom.byId("mframe" + mapID));
               parser.parse();
 
-              var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/";
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
 
               var layer, visibleLayerIds = []; //list of visible layers
 
