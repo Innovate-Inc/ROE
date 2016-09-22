@@ -76,9 +76,9 @@ innovate.Map = function(mapID){
               //parser.parse(dom.byId("mframe" + mapID));
               parser.parse();
 
-              var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/";
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
 
               var layer, visibleLayerIds = []; //list of visible layers
 
@@ -711,9 +711,9 @@ innovate.Map = function(mapID){
 
               parser.parse();
 
-              //var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/";
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
 
               //Add map and set map properties
               roeMapAbsSea = new Map("mapDiv" + mapID, {
@@ -956,9 +956,9 @@ innovate.Map = function(mapID){
 
               parser.parse();
 
-              //var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/"; 
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/"; 
 
               //Add map and set map properties
               roeMapPrecip = new Map("mapDiv" + mapID, {
@@ -1260,9 +1260,9 @@ innovate.Map = function(mapID){
 
               parser.parse();
 
-              //var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/";
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
 
               //Add map and set map properties
               roeMapTemp = new Map("mapDiv" + mapID, {
@@ -1563,11 +1563,11 @@ innovate.Map = function(mapID){
 
               parser.parse();
 
-              //var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/";
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
 
-              esriConfig.defaults.geometryService = new GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
+              esriConfig.defaults.geometryService = new GeometryService("https://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
               var layer, visibleLayerIds = []; //list of visible layers
 
               //Add map and set map properties
@@ -1742,16 +1742,16 @@ innovate.Map = function(mapID){
                   var imgURL = "";
                   var sign = "";
                   //Innovate Service Images
-                  if (attr.Total_inch <= -8) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/b0d6862c403495594c5324fd652e7c42" }
-                  else if (attr.Total_inch > -7.99 && attr.Total_inch < -6) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/59cedcdf500c7ad7c0c2b58cfa21fc3c" }
-                  else if (attr.Total_inch > -5.99 && attr.Total_inch < -4) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/3fd9ea0d622c5e0b4943767fa5ee8fd0" }
-                  else if (attr.Total_inch > -3.99 && attr.Total_inch < -2) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/62fffe3d96258d2e61646d665b9e134b" }
-                  else if (attr.Total_inch > -1.99 && attr.Total_inch < 0) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/ac4d39680ed566c62be060fb0cc815a4" }
-                  else if (attr.Total_inch > .01 && attr.Total_inch < 2) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/f39e50aab49210ec9222c78ae0f096e9" }
-                  else if (attr.Total_inch > 2.01 && attr.Total_inch < 4) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/9e66bd00546331e58583eab0c6abdc4a" }
-                  else if (attr.Total_inch > 4.01 && attr.Total_inch < 6) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/21093d92eea0a8b7e5e82e07f6f12ba8" }
-                  else if (attr.Total_inch > 6.01 && attr.Total_inch < 8) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/2dccf01a6903f07a36e32b7d24adf6b8" }
-                  else if (attr.Total_inch >= 8) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/3eccc1672daa52a115f6d2bb353fe2c7" }
+                  //if (attr.Total_inch <= -8) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/b0d6862c403495594c5324fd652e7c42" }
+                  //else if (attr.Total_inch > -7.99 && attr.Total_inch < -6) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/59cedcdf500c7ad7c0c2b58cfa21fc3c" }
+                  //else if (attr.Total_inch > -5.99 && attr.Total_inch < -4) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/3fd9ea0d622c5e0b4943767fa5ee8fd0" }
+                  //else if (attr.Total_inch > -3.99 && attr.Total_inch < -2) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/62fffe3d96258d2e61646d665b9e134b" }
+                  //else if (attr.Total_inch > -1.99 && attr.Total_inch < 0) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/ac4d39680ed566c62be060fb0cc815a4" }
+                  //else if (attr.Total_inch > .01 && attr.Total_inch < 2) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/f39e50aab49210ec9222c78ae0f096e9" }
+                  //else if (attr.Total_inch > 2.01 && attr.Total_inch < 4) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/9e66bd00546331e58583eab0c6abdc4a" }
+                  //else if (attr.Total_inch > 4.01 && attr.Total_inch < 6) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/21093d92eea0a8b7e5e82e07f6f12ba8" }
+                  //else if (attr.Total_inch > 6.01 && attr.Total_inch < 8) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/2dccf01a6903f07a36e32b7d24adf6b8" }
+                  //else if (attr.Total_inch >= 8) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/3eccc1672daa52a115f6d2bb353fe2c7" }
                   //NCC Staging service images
                   //if (attr.mm_per_year <= -4) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/c7585a99c01be050ac0324c42d1f482d" }
                   //else if (attr.mm_per_year > -3.99 && attr.mm_per_year < -3) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/995b0721e77aabe9efca2aaed6cd0fa0" }
@@ -1765,16 +1765,16 @@ innovate.Map = function(mapID){
                   //else if (attr.mm_per_year >= 4) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/4a8b597cdce0fe584406da627bb27a05" }
 
                   //NCC Production service images
-                  //if (attr.mm_per_year <= -4) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/c7585a99c01be050ac0324c42d1f482d" }
-                  //else if (attr.mm_per_year > -3.99 && attr.mm_per_year < -3) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/995b0721e77aabe9efca2aaed6cd0fa0" }
-                  //else if (attr.mm_per_year > -2.99 && attr.mm_per_year < -2) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/ec3cf171f4333d58f0e0854a814913f0" }
-                  //else if (attr.mm_per_year > -1.99 && attr.mm_per_year < -1) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/112dbd07b575acc343c740f2b8dfe4ef" }
-                  //else if (attr.mm_per_year > -.99 && attr.mm_per_year < 0) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/bd8e0976623d27fc1dfb1368ca4723df" }
-                  //else if (attr.mm_per_year > .1 && attr.mm_per_year < 1) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/2bd61693cef0880c084783365a8254a3" }
-                  //else if (attr.mm_per_year > 1.01 && attr.mm_per_year < 2) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/b52a5d028a3d3adeb4a489fb2f70289b" }
-                  //else if (attr.mm_per_year > 2.01 && attr.mm_per_year < 3) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/a1a68b0df406ea807ee4e31088f33bb8" }
-                  //else if (attr.mm_per_year > 3.01 && attr.mm_per_year < 4) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/9eee329ebf6cbd093f7bf8cfc285335e" }
-                  //else if (attr.mm_per_year >= 4) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/4a8b597cdce0fe584406da627bb27a05" }
+                  if (attr.Total_inch <= -8) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/b0d6862c403495594c5324fd652e7c42" }
+                  else if (attr.Total_inch > -7.99 && attr.Total_inch < -6) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/3f54bcf0e9bab7f7932cf735d89e9ab7" }
+                  else if (attr.Total_inch > -5.99 && attr.Total_inch < -4) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/aa0fab85fcd15c00cc6be57a78517303" }
+                  else if (attr.Total_inch > -3.99 && attr.Total_inch < -2) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/e940d52a2bdc448628fd9c4512ade1cd" }
+                  else if (attr.Total_inch > -1.99 && attr.Total_inch < 0) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/8fcd316f6a83bf173372989b80282603" }
+                  else if (attr.Total_inch > .01 && attr.Total_inch < 2) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/73d32ab5d5a46a08bf431b1f9d8d77e9" }
+                  else if (attr.Total_inch > 2.01 && attr.Total_inch < 4) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/9e66bd00546331e58583eab0c6abdc4a" }
+                  else if (attr.Total_inch > 4.01 && attr.Total_inch < 6) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/21093d92eea0a8b7e5e82e07f6f12ba8" }
+                  else if (attr.Total_inch > 6.01 && attr.Total_inch < 8) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/2716c9af2c2a2dca0392458d159d443e" }
+                  else if (attr.Total_inch >= 8) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/4fae9b9bda73800e709f5403d3846b3e" }
 
                   var content = "";
                   
@@ -1919,9 +1919,9 @@ innovate.Map = function(mapID){
 
               parser.parse();
 
-              var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/";
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
 
               //esriConfig.defaults.geometryService = new GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
               //var layer, visibleLayerIds = []; //list of visible layers
@@ -2164,9 +2164,9 @@ innovate.Map = function(mapID){
               //parser.parse(dom.byId("mframe" + mapID));
               parser.parse();
 
-              var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/";
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
 
               var layer, visibleLayerIds = []; //list of visible layers
 
@@ -2388,19 +2388,19 @@ innovate.Map = function(mapID){
                       //alert(rState);
                       desc = "<b>Zone 1 </b>counties have a predicted average indoor radon screening level greater than 4 pCi/L (picocuries per liter) <b>(red zones)</b>";
                       priority = "<b>Highest Potential</b>";
-                      //imgURL = "http://it.innovateteam.com/arcgis/rest/services/ROE/ROE_Radon/MapServer/0/images/3b6a386668a6d07b8d8e029744820282"
+                      //imgURL = "https://it.innovateteam.com/arcgis/rest/services/ROE/ROE_Radon/MapServer/0/images/3b6a386668a6d07b8d8e029744820282"
                       imgURL = restEnd + "ROE_Radon/MapServer/0/images/7222a20623b288194ba3a4929f4a9610";
                   } else if (rVal == "2") {
                       //alert(rVal + "should be 2");
                       desc = "<b>Zone 2 </b>counties have a predicted average indoor radon screening level between 2 and 4 pCi/L <b>(orange zones)</b>";
                       priority = "<b>Moderate Potential</b>";
-                      //imgURL = "http://it.innovateteam.com/arcgis/rest/services/ROE/ROE_Radon/MapServer/0/images/52edb92fef3b3447d910ea3f4e3bad06"
+                      //imgURL = "https://it.innovateteam.com/arcgis/rest/services/ROE/ROE_Radon/MapServer/0/images/52edb92fef3b3447d910ea3f4e3bad06"
                       imgURL = restEnd + "ROE_Radon/MapServer/0/images/0af36609991455aceba15b73b91ce066";
                   } else if (rVal == "3") {
                       //alert(rVal + "should be 3");
                       desc = "<b>Zone 3 </b>counties have a predicted average indoor radon screening level less than 2 pCi/L <b>(yellow zones)</b>";
                       priority = "<b>Low Potential</b>";
-                      //imgURL = "http://it.innovateteam.com/arcgis/rest/services/ROE/ROE_Radon/MapServer/0/images/d1573b09a0505bef245b2a380a18e380"
+                      //imgURL = "https://it.innovateteam.com/arcgis/rest/services/ROE/ROE_Radon/MapServer/0/images/d1573b09a0505bef245b2a380a18e380"
                       imgURL = restEnd + "ROE_Radon/MapServer/0/images/77ea99fb7956be59e6314b0eb1ddefe3";
                   }
 
@@ -2533,9 +2533,9 @@ innovate.Map = function(mapID){
               //parser.parse(dom.byId("mframe" + mapID));
               parser.parse();
 
-              var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/"; //Innovate Rest Endpoint
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/"; //Innovate Rest Endpoint
 
               var layer, visibleLayerIds = []; //list of visible layers
 
@@ -2885,9 +2885,9 @@ innovate.Map = function(mapID){
               //parser.parse(dom.byId("mframe" + mapID));
               parser.parse();
 
-              var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/"; //Innovate Rest Endpoint
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/"; //Innovate Rest Endpoint
 
               var layer, visibleLayerIds = []; //list of visible layers
 
@@ -3157,11 +3157,11 @@ innovate.Map = function(mapID){
 
               parser.parse();
 
-              var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/"; //Innovate Rest Endpoint
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/"; //Innovate Rest Endpoint
 
-              esriConfig.defaults.geometryService = new GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
+              esriConfig.defaults.geometryService = new GeometryService("https://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
               var layer, visibleLayerIds = []; //list of visible layers
 
               //Add map and set map properties
@@ -3203,7 +3203,7 @@ innovate.Map = function(mapID){
 
               //Hard code layers for now
 
-              dynamicMapSerives[0] = new ArcGISDynamicMapServiceLayer("http://geodata.epa.gov/arcgis/rest/services/ORD/" + currentObject.config.layers[0] + "/MapServer", {
+              dynamicMapSerives[0] = new ArcGISDynamicMapServiceLayer("https://geodata.epa.gov/arcgis/rest/services/ORD/" + currentObject.config.layers[0] + "/MapServer", {
                   //"opacity": 1,
                   "imageParameters": imageParameters,
                   
@@ -3459,11 +3459,11 @@ innovate.Map = function(mapID){
 
               parser.parse();
 
-              var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/"; //Innovate Rest Endpoint
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/"; //Innovate Rest Endpoint
 
-              esriConfig.defaults.geometryService = new GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
+              esriConfig.defaults.geometryService = new GeometryService("https://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
               var layer, visibleLayerIds = []; //list of visible layers
 
               //Add map and set map properties
@@ -3505,7 +3505,7 @@ innovate.Map = function(mapID){
 
               //Hard code layers for now
 
-              dynamicMapSerives[0] = new ArcGISDynamicMapServiceLayer("http://geodata.epa.gov/arcgis/rest/services/ORD/" + currentObject.config.layers[0] + "/MapServer", {
+              dynamicMapSerives[0] = new ArcGISDynamicMapServiceLayer("https://geodata.epa.gov/arcgis/rest/services/ORD/" + currentObject.config.layers[0] + "/MapServer", {
                   //"opacity": 1,
                   "imageParameters": imageParameters,
 
@@ -3760,11 +3760,11 @@ innovate.Map = function(mapID){
 
               parser.parse();
 
-              var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/";
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
 
-              esriConfig.defaults.geometryService = new GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
+              esriConfig.defaults.geometryService = new GeometryService("https://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
               var layer, visibleLayerIds = []; //list of visible layers
 
               //Add map and set map properties
@@ -3807,14 +3807,14 @@ innovate.Map = function(mapID){
                   //"opacity": 1,
                   "imageParameters": imageParameters,
               });
-              //dynamicMapSerives[2] = new ArcGISDynamicMapServiceLayer("http://geodata.epa.gov/arcgis/rest/services/ORD/" + currentObject.config.layers[2] + "/MapServer", {
+              //dynamicMapSerives[2] = new ArcGISDynamicMapServiceLayer("https://geodata.epa.gov/arcgis/rest/services/ORD/" + currentObject.config.layers[2] + "/MapServer", {
               //    //"opacity": 1,
               //    "imageParameters": imageParameters,
               //});
               
               //Loop through layer list in the config file.
               //for (var i = 0; i < currentObject.config.layers.length; i++) {
-              //    dynamicMapSerives[i] = new ArcGISDynamicMapServiceLayer("http://geodata.epa.gov/arcgis/rest/services/ORD/" + currentObject.config.layers[i] + "/MapServer", {
+              //    dynamicMapSerives[i] = new ArcGISDynamicMapServiceLayer("https://geodata.epa.gov/arcgis/rest/services/ORD/" + currentObject.config.layers[i] + "/MapServer", {
               //        //"opacity": 1,
               //        "imageParameters": imageParameters,
               //    });
@@ -4161,11 +4161,11 @@ innovate.Map = function(mapID){
 
               parser.parse();
 
-              var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/";
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
 
-              esriConfig.defaults.geometryService = new GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
+              esriConfig.defaults.geometryService = new GeometryService("https://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
               var layer, visibleLayerIds = []; //list of visible layers
 
               //Add map and set map properties
@@ -4212,7 +4212,7 @@ innovate.Map = function(mapID){
 
               //Loop through layer list in the config file.
               //for (var i = 0; i < currentObject.config.layers.length; i++) {
-              //    dynamicMapSerives[i] = new ArcGISDynamicMapServiceLayer("http://geodata.epa.gov/arcgis/rest/services/ORD/" + currentObject.config.layers[i] + "/MapServer", {
+              //    dynamicMapSerives[i] = new ArcGISDynamicMapServiceLayer("https://geodata.epa.gov/arcgis/rest/services/ORD/" + currentObject.config.layers[i] + "/MapServer", {
               //        //"opacity": 1,
               //        "imageParameters": imageParameters,
               //    });
@@ -4553,9 +4553,9 @@ innovate.Map = function(mapID){
 
               parser.parse();
 
-              var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA production Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/";
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA production Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
 
               //Add map and set map properties
               roeMapEco = new Map("mapDiv" + mapID, {
@@ -4835,9 +4835,9 @@ innovate.Map = function(mapID){
               //parser.parse(dom.byId("mframe" + mapID));
               parser.parse();
 
-              var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/"; //Innovate Rest Endpoint
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/"; //Innovate Rest Endpoint
 
               var layer, visibleLayerIds = []; //list of visible layers
 
@@ -5153,9 +5153,9 @@ innovate.Map = function(mapID){
               //parser.parse(dom.byId("mframe" + mapID));
               parser.parse();
 
-              var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/";
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
 
               //Add map and set map properties
               roeMapBio = new Map("mapDiv" + mapID, {
@@ -5316,7 +5316,7 @@ innovate.Map = function(mapID){
               dojo.connect(roeMapBio, "onClick", executeBioQueryTask);
               dojo.connect(roeMapBio.infoWindow, "onHide", function () { roeMapBio.graphics.clear(); });
               queryTaskBio = new esri.tasks.QueryTask(restEnd + currentObject.config.layers[0] + "/MapServer/1");
-              //alert("http://it.innovateteam.com/arcgis/rest/services/ROE/" + currentObject.config.layers[0] + "/MapServer/1");
+              //alert("https://it.innovateteam.com/arcgis/rest/services/ROE/" + currentObject.config.layers[0] + "/MapServer/1");
               //Set query task
               queryBio = new esri.tasks.Query();
               queryBio.outSpatialReference = { "wkid": 3857 };
@@ -5495,9 +5495,9 @@ innovate.Map = function(mapID){
               //parser.parse(dom.byId("mframe" + mapID));
               parser.parse();
 
-              var restEnd = "http://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "http://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "http://it.innovateteam.com/arcgis/rest/services/ROE/";
+              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
 
               //Add map and set map properties
               roeMapCarbon = new Map("mapDiv" + mapID, {
@@ -5804,172 +5804,5 @@ innovate.Map = function(mapID){
                   });
               }
           });
-    }
-
-    //this.legend_Image = function () {
-
-    //    require([
-    //      "esri/map",
-    //      "esri/layers/ArcGISDynamicMapServiceLayer",
-    //      "esri/layers/ImageParameters",
-    //      "esri/InfoTemplate",
-    //      "esri/layers/FeatureLayer",
-    //      "esri/dijit/Legend",
-    //      "esri/tasks/query",
-    //      "esri/renderers/SimpleRenderer",
-    //      "esri/symbols/SimpleFillSymbol",
-    //      "esri/symbols/SimpleLineSymbol",
-    //      "esri/dijit/BasemapToggle",
-    //      "esri/dijit/Scalebar",
-    //      "dojo/dom",
-    //      "dojo/number",
-    //      "dojo/on",
-    //      "dojo/parser",
-    //      "dojo/_base/array",
-    //      "esri/Color",
-    //      "dojo/string",
-    //      "esri/request",
-    //      "dojo/dom-style",
-    //      "dijit/form/HorizontalSlider",
-    //      "dijit/popup",
-    //      "dijit/layout/BorderContainer",
-    //      "dijit/layout/ContentPane",
-    //      "dojox/layout/ExpandoPane",
-    //      "dojo/domReady!",
-    //    ],
-    //      function (
-    //        Map, ArcGISDynamicMapServiceLayer, ImageParameters, InfoTemplate, FeatureLayer, Legend, Query, SimpleRenderer, SimpleFillSymbol,
-    //        SimpleLineSymbol, BasemapToggle, Scalebar, dom, number, on, parser, arrayUtils, Color, string, esriRequest, domStyle, HorizontalSlider, popup
-    //    ) {
-    //          alert(currentObject.config.legend.url);
-    //          var content = "<div><img alt=\"\" width=\"450px\" align=\"middle\" src=\"" + currentObject.config.legend.url + "\"></div>"; //"<div class=\"innvateLegend\"><div></div>";
-    //          //content = content + "<div><img alt=\"\" src=\"" + currentObject.config.legend.url + "\"></div>";
-    //          var legendContainer = document.getElementById("legendDiv" + mapID);
-    //          $(legendContainer).append(content);
-
-    //      });
-    //}
-
-    //this.click_radon = function () {
-    //    var roeMap = rMap;
-    //    require([
-    //      "esri/map",
-    //      "esri/layers/ArcGISDynamicMapServiceLayer",
-    //      "esri/layers/ImageParameters",
-    //      "esri/InfoTemplate",
-    //      "esri/layers/FeatureLayer",
-    //      "esri/dijit/Legend",
-    //      "esri/tasks/query",
-    //      "esri/renderers/SimpleRenderer",
-    //      "esri/symbols/SimpleFillSymbol",
-    //      "esri/symbols/SimpleLineSymbol",
-    //      "esri/dijit/BasemapToggle",
-    //      "esri/dijit/Scalebar",
-    //      "dojo/dom",
-    //      "dojo/number",
-    //      "dojo/on",
-    //      "dojo/parser",
-    //      "dojo/_base/array",
-    //      "esri/Color",
-    //      "dojo/string",
-    //      "esri/request",
-    //      "dojo/dom-style",
-    //      "dijit/form/HorizontalSlider",
-    //      "dijit/popup",
-    //      "dijit/layout/BorderContainer",
-    //      "dijit/layout/ContentPane",
-    //      "dojox/layout/ExpandoPane",
-    //      "dojo/domReady!",
-    //    ],
-    //      function (
-    //        Map, ArcGISDynamicMapServiceLayer, ImageParameters, InfoTemplate, FeatureLayer, Legend, Query, SimpleRenderer, SimpleFillSymbol,
-    //        SimpleLineSymbol, BasemapToggle, Scalebar, dom, number, on, parser, arrayUtils, Color, string, esriRequest, domStyle, HorizontalSlider, popup
-    //    ) {
-
-
-    //          //adding code 6/20/14
-    //          //Query and infoWindow setup
-    //          dojo.connect(roeMap, "onClick", executeQueryTask);
-    //          dojo.connect(roeMap.infoWindow, "onHide", function () { roeMap.graphics.clear(); });
-    //          radonQueryTask = new esri.tasks.QueryTask("http://geodata.epa.gov/arcgis/rest/services/ORD/" + currentObject.config.layers[0] + "/MapServer/0");
-
-    //          //Set query task
-    //          radonQuery = new esri.tasks.Query();
-    //          radonQuery.outSpatialReference = { "wkid": 3857 };
-    //          radonQuery.returnGeometry = true;
-    //          radonQuery.outFields = ["*"];
-
-    //          //Execute query
-    //          function executeQueryTask(evt) {
-    //              roeMap.infoWindow.hide();    //Hide Popup
-    //              roeMap.graphics.clear();     //Clear Graphics
-    //              radonFeatureSet = null;        //Reset the Featureset
-
-    //              //Find clicked location and execute query
-    //              radonQuery.geometry = evt.mapPoint;
-    //              radonQueryTask.execute(radonQuery, function (fset) {
-    //                  if (fset.features.length === 1) {
-    //                      radonShowFeature(fset.features[0], evt);
-    //                  } else if (fset.features.length !== 0) {
-    //                      showFeatureSet(fset, evt);
-    //                  }
-    //              });
-    //          }
-    //          //Show feature that was clicked
-    //          function radonShowFeature(feature, evt) {
-    //              roeMap.graphics.clear();     //Clear graphics on the map
-    //              //set graphic symbol
-    //              var symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID, new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255, 0, 0]), 2), new dojo.Color([255, 255, 255, 0]));
-    //              feature.setSymbol(symbol);
-    //              //function to set text to tittle case
-    //              function toTitleCase(str) {
-    //                  return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-    //              }
-    //              // Build text and layout for the popup
-    //              var attr = feature.attributes;
-    //              var title = attr.NAMELSAD + ", " + toTitleCase(attr.StateName); //Title in the popup
-    //              var content = "";     //holds the content in the popup
-
-    //              var rVal = attr.RadonZone;
-    //              var content = "";
-    //              var desc = "";
-    //              var priority = "";
-    //              if (rVal == "1") {
-    //                  //alert(rState);
-    //                  desc = "<b>Zone 1 </b>counties have a predicted average indoor radon screening level greater than 4 pCi/L (picocuries per liter) <b>(red zones)</b>";
-    //                  priority = "<b>Highest Potential</b>";
-    //                  //imgURL = "http://it.innovateteam.com/arcgis/rest/services/ROE/ROE_Radon/MapServer/0/images/3b6a386668a6d07b8d8e029744820282"
-    //                  imgURL = "http://geodata.epa.gov/arcgis/rest/services/ORD/ROE_Radon/MapServer/0/images/7222a20623b288194ba3a4929f4a9610";
-    //              } else if (rVal == "2") {
-    //                  //alert(rVal + "should be 2");
-    //                  desc = "<b>Zone 2 </b>counties have a predicted average indoor radon screening level between 2 and 4 pCi/L<b>(orange zones)</b>";
-    //                  priority = "<b>Moderate Potential</b>";
-    //                  //imgURL = "http://it.innovateteam.com/arcgis/rest/services/ROE/ROE_Radon/MapServer/0/images/52edb92fef3b3447d910ea3f4e3bad06"
-    //                  imgURL = "http://geodata.epa.gov/arcgis/rest/services/ORD/ROE_Radon/MapServer/0/images/0af36609991455aceba15b73b91ce066";
-    //              } else if (rVal == "3") {
-    //                  //alert(rVal + "should be 3");
-    //                  desc = "<b>Zone 3 </b>counties have a predicted average indoor radon screening level less than 2 pCi/L <b>(yellow zones)</b>";
-    //                  priority = "<b>Low Potential</b>";
-    //                  //imgURL = "http://it.innovateteam.com/arcgis/rest/services/ROE/ROE_Radon/MapServer/0/images/d1573b09a0505bef245b2a380a18e380"
-    //                  imgURL = "http://geodata.epa.gov/arcgis/rest/services/ORD/ROE_Radon/MapServer/0/images/77ea99fb7956be59e6314b0eb1ddefe3";
-    //              }
-
-    //              content = "<div>Radon risk zone: " + rVal + "</div></br>" +
-    //                      "<table style=\"width:420px\height:120px\"><tbody><tr style=\"background-color: #EEEEEE; border-color:#DDDDDD;border-style: solid; border-width: 1px 0 1px 0px;padding: 5px;\">" +
-    //                      "<td valign=\"top\" align=\"center\"><div><img alt=\"\" src=\"" + imgURL + "\"></div></td>" +
-    //                      "<td valign=\"top\" align=\"left\">" + desc + "</td>" +
-    //                      "<td valign=\"top\" align=\"left\">" + priority + "</td></tr></tbody></table>";
-    //              //Add graphics
-    //              roeMap.graphics.add(feature);
-    //              //Set title and content for the popup window
-    //              roeMap.infoWindow.setTitle(title);
-    //              roeMap.infoWindow.setContent(content);
-
-    //              (evt) ? roeMap.infoWindow.show(evt.screenPoint, roeMap.getInfoWindowAnchor(evt.screenPoint)) : null;
-    //              roeMap.infoWindow.resize(300, 120);
-    //          }
-    //      });
-    //}
-
-   
+    } 
 }
