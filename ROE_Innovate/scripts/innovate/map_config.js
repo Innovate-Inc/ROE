@@ -56,7 +56,7 @@ var innovate_config = {
         ,'dataSource':'U.S. EPA, 2007d'
         ,'legend':{
             //"url":'ROE/SeaLevelAbsolute/MapServer/legend'
-            "url": 'http://app2.erg.com/roe/images/legend/87-3.png'
+            "url": 'http://cfpub.epa.gov/roe/images/legend/87-3.png'
            
         }
         , 'baseMap': ['hybrid', 'gray']
@@ -79,7 +79,7 @@ var innovate_config = {
             // "url":'http://it.innovateteam.com/arcgis/rest/services/ROE/ROE_Precipitation2013/MapServer/legend'
             //"url":'http://geodata.epa.gov/arcgis/rest/services/ORD/ROE_Precipitation/MapServer/legend'
             //"url": 'http://app2.erg.com/ROEsystem/public/images/legend/89-8.png'
-            "url": 'http://app2.erg.com/roe/images/legend/89-8.png'
+            "url": 'http://cfpub.epa.gov/roe/images/legend/89-8.png'
             ,"layers":{"0":"Rate of change in precipitation (% per century):"}
             // ,"cols" : 4//manual override on no of columns to dispplay in legend because the average thing didn't work out for this map
         }
@@ -103,7 +103,7 @@ var innovate_config = {
             //"url":'http://it.innovateteam.com/arcgis/rest/services/ROE/ROE_Temperature2013/MapServer/legend'
             //"url":'http://geodata.epa.gov/arcgis/rest/services/ORD/ROE_Temperature/MapServer/legend'
             //"url": 'http://app2.erg.com/ROEsystem/public/images/legend/89-4.png'
-            "url": 'http://app2.erg.com/roe/images/legend/89-4.png'
+            "url": 'http://cfpub.epa.gov/roe/images/legend/89-4.png'
             ,"layers":{"0":"Rate of temperature change (°F per century):"}
             //,"cols":4
         }
@@ -124,7 +124,7 @@ var innovate_config = {
         ,'footNote':'This is a test footer note for this exhibit'
         ,'dataSource':'U.S. EPA, 2007d'
         ,'legend':{
-            "url": 'http://app2.erg.com/ROE/images/legend/87-1.png'
+            "url": 'http://cfpub.epa.gov/roe/images/legend/87-1.png'
             //"url":'ROE_SeaLevelRelative/MapServer/legend'
             //,"layers":{"0":"Mean relative sea level change (mm per year):"}
             //,"cols" : 4//manual override on no of columns to dispplay in legend because the average thing didn't work out for this map
@@ -346,7 +346,7 @@ var innovate_config = {
         ,'footNote':''
         ,'dataSource':'U.S. EPA, 2012'
         ,'legend':{
-            "url": 'http://app2.erg.com/ROEsystem/public/images/legend/41-2.png'
+            "url": 'https://cfpub.epa.gov/roe/images/legend/41-2.png'
             //,"discard":{"1":"Y"}
         }
         ,'baseMap' : ['hybrid','gray']
@@ -366,7 +366,7 @@ var innovate_config = {
         ,'footNote':'This is a test footer note for this exhibit'
         ,'dataSource':'U.S. EPA, 2007d'
         ,'legend':{
-             "url":'http://app2.erg.com/ROEsystem/public/images/legend/87-1.png'
+             "url":'https://cfpub.epa.gov/roe/images/legend/87-1.png'
             //"url":'ROE_SeaLevelRelative/MapServer/legend'
             //,"layers":{"0":"Mean relative sea level change (mm per year):"}
             //,"cols" : 4//manual override on no of columns to dispplay in legend because the average thing didn't work out for this map
