@@ -2533,9 +2533,9 @@ innovate.Map = function(mapID){
               //parser.parse(dom.byId("mframe" + mapID));
               parser.parse();
 
-              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+              // var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
               //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/"; //Innovate Rest Endpoint
+              var restEnd = "https://arcserver.innovateteam.com/arcgis/rest/services/ROE/"; //Innovate Rest Endpoint
 
               var layer, visibleLayerIds = []; //list of visible layers
 
@@ -3760,9 +3760,9 @@ innovate.Map = function(mapID){
 
               parser.parse();
 
-              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Rest Endpoint
+              // var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Rest Endpoint
               //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
+              var restEnd = "https://arcserver.innovateteam.com/arcgis/rest/services/ROE/";
 
               esriConfig.defaults.geometryService = new GeometryService("https://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
               var layer, visibleLayerIds = []; //list of visible layers
@@ -4161,9 +4161,9 @@ innovate.Map = function(mapID){
 
               parser.parse();
 
-              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Rest Endpoint
+              // var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Rest Endpoint
               //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
+              var restEnd = "https://arcserver.innovateteam.com/arcgis/rest/services/ROE/";
 
               esriConfig.defaults.geometryService = new GeometryService("https://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
               var layer, visibleLayerIds = []; //list of visible layers
@@ -4256,7 +4256,7 @@ innovate.Map = function(mapID){
               //Add buttons onto the map for the years
             $(layersYears).after("<div id=\"dsetFrm\">" +
             "<input class=\"button1\" type=\"button\" name=\"old\" id=\"btn_0_" + mapID + "\" value=\"1989-1991\" style=\"background: white; color: #64acf7\" />" +
-            "<input class=\"button1\" type=\"button\" name=\"new\" id=\"btn_1_" + mapID + "\" value=\"2011-2013\" checked=\"True\" style=\"background: #64acf7; color: black\" />" +
+            "<input class=\"button1\" type=\"button\" name=\"new\" id=\"btn_1_" + mapID + "\" value=\"2014-2016\" checked=\"True\" style=\"background: #64acf7; color: black\" />" +
             "</div>");
 
               on(dom.byId("btn_0_" + mapID), "click", updateSulfLayer);
@@ -4405,14 +4405,14 @@ innovate.Map = function(mapID){
 
                   //alert(queryTask.url);
                   if (queryTask.url == (restEnd + currentObject.config.layers[1] +"/MapServer/0")) {
-                      var percent = Math.round((parseFloat(attr["Dry_Sulfur"]) * 100.0) / parseFloat(attr["TOTAL_SULF"]));
+                      var percent = Math.round((parseFloat(attr["Dry_Sulfur"]) * 100.0) / parseFloat(attr["Total_SULF"]));
                       //alert("2014");
                       content = "";
                       content += "<div style=\"width:280px;\">"
                       content += "<div style=\" margin-bottom: 6px\"><img src=\"" + "images/pies/sulfur/dry_" + percent + ".png" + "\" width=\"30px\" height=\"30px\"/></div>";
                       content += "<div style=\" margin-bottom: 6px\"><span style=\"border:1px solid #CCC; width:15px; height:15px;background-color:rgb(255,205,78);display:block; float: left; margin-right:4px;\"></span><span>Dry deposition : " + feature.attributes["Dry_Sulfur"].toFixed(2) + " kg/ha</span></div>"
                       content += "<div style=\" margin-bottom: 6px\"><span style=\"border:1px solid #CCC; width:15px; height:15px;background-color:rgb(201,100,78);display:block; float: left; margin-right:4px;\"></span><span>Wet deposition : " + feature.attributes["Wet_Sulfur"].toFixed(2) + " kg/ha</span></div>"
-                      content += "<div><span >Total : </span><span>" + feature.attributes["TOTAL_SULF"].toFixed(2) + " kg/ha</span></div>"
+                      content += "<div><span >Total : </span><span>" + feature.attributes["Total_SULF"].toFixed(2) + " kg/ha</span></div>"
                       content += "</div>";
                   } else {
                       var percent = Math.round((parseFloat(attr["DRY_S"]) * 100.0) / parseFloat(attr["TOTAL_S"]));

@@ -284,7 +284,7 @@ var innovate_config = {
         }
         , 'baseMap': ['hybrid', 'gray']
         //, 'layers': ['wms_totalnitrogendeposition1989-1991', 'ROE_TotalNitrogenDeposition2014']
-        , 'layers': ['ROE_TotalNitrogenDeposition1989_1991', 'ROE_TotalNitrogenDeposition2011_2013', 'ROE_StateBoundariesThicker']
+        , 'layers': ['ROE_TotalNitrogenDeposition1989_1991', 'ROE_TotalNitrogenDeposition', 'ROE_StateBoundariesThicker']
         , 'layerDisplayName': ['Total Nitrogen Deposition 1989-1991', 'Total Nitrogen Deposition 2011-2013']  //TotalNitrogenDeposition2014  TotalNitrogenDeposition2011
         ,'initialDisplayLayer':1
         ,'controls':['LayerSwitcher','InnovateMapFullScreen','ScaleLine','click_nitrogenDeposition','InnovateOverlaySwitcher','Attribution','InnovateMapLegend']
@@ -307,8 +307,8 @@ var innovate_config = {
             //,"discard":{"0":"Y"}
         }
         , 'baseMap': ['hybrid', 'gray']
-        , 'layers': ['ROE_TotalSulfurDeposition1989_1991', 'ROE_TotalSulfurDeposition2011_2013']  //ROE_totalsulfurdeposition2009-2011
-        , 'layerDisplayName': ['Total Sulfur Deposition 1989-1991', 'Total Sulfur Deposition 2011-2013']
+        , 'layers': ['ROE_TotalSulfurDeposition1989_1991', 'ROE_TotalSulfurDeposition']  //ROE_totalsulfurdeposition2009-2011
+        , 'layerDisplayName': ['Total Sulfur Deposition 1989-1991', 'Total Sulfur Deposition 2014-2016']
         ,'initialDisplayLayer':1
         ,'controls':['LayerSwitcher','InnovateMapFullScreen','click_sulfurDeposition','InnovateOverlaySwitcher','ScaleLine','Attribution','InnovateMapLegend']
         ,'hide_controls':['PanZoomBar']
