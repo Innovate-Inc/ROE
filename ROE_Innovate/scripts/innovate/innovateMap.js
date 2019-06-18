@@ -3858,7 +3858,7 @@ innovate.Map = function(mapID){
               //Add buttons onto the map for the years
               $(layersYears).after("<div id=\"dsetFrm\">" +
             "<input class=\"button1\" type=\"button\" name=\"old\" id=\"btn_0_" + mapID + "\" value=\"1989-1991\" style=\"background: white; color: #64acf7\" />" +
-            "<input class=\"button1\" type=\"button\" name=\"new\" id=\"btn_1_" + mapID + "\" value=\"2011-2013\" checked=\"True\" style=\"background: #64acf7; color: black\" />" +  
+            "<input class=\"button1\" type=\"button\" name=\"new\" id=\"btn_1_" + mapID + "\" value=\"2014-2016\" checked=\"True\" style=\"background: #64acf7; color: black\" />" +
             "</div>");
 
               on(dom.byId("btn_0_" + mapID), "click", updateNitLayer);

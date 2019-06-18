@@ -285,7 +285,7 @@ var innovate_config = {
         , 'baseMap': ['hybrid', 'gray']
         //, 'layers': ['wms_totalnitrogendeposition1989-1991', 'ROE_TotalNitrogenDeposition2014']
         , 'layers': ['ROE_TotalNitrogenDeposition1989_1991', 'ROE_TotalNitrogenDeposition', 'ROE_StateBoundariesThicker']
-        , 'layerDisplayName': ['Total Nitrogen Deposition 1989-1991', 'Total Nitrogen Deposition 2011-2013']  //TotalNitrogenDeposition2014  TotalNitrogenDeposition2011
+        , 'layerDisplayName': ['Total Nitrogen Deposition 1989-1991', 'Total Nitrogen Deposition 2014-2016']  //TotalNitrogenDeposition2014  TotalNitrogenDeposition2011
         ,'initialDisplayLayer':1
         ,'controls':['LayerSwitcher','InnovateMapFullScreen','ScaleLine','click_nitrogenDeposition','InnovateOverlaySwitcher','Attribution','InnovateMapLegend']
         ,'hide_controls':['PanZoomBar']
