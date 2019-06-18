@@ -237,8 +237,8 @@ var innovate_config = {
             "url": './scripts/innovate/images/1-2.png'
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
-        , 'layers': ['ROE_WetNitrateDeposition1989_1991', 'ROE_WetNitrateDeposition2011_2013', 'ROE_StateBoundaries']
-        , 'layerDisplayName': ['Wet Nitrate Deposition 1989-1991', 'Wet Nitrate Deposition 2011-2013']
+        , 'layers': ['ROE_WetNitrateDeposition1989_1991', 'ROE_WetNitrateDeposition', 'ROE_StateBoundaries']
+        , 'layerDisplayName': ['Wet Nitrate Deposition 1989-1991', 'Wet Nitrate Deposition 2014-2016']
         ,'controls':['LayerSwitcher','InnovateMapFullScreen','ScaleLine','InnovateOverlaySwitcher','Attribution','InnovateMapLegend']
         ,'overlaySwitcherRefreshDuration' : 50
         ,'overlaySwitcherLayers' : ['wms_wetnitratedeposition1989-1991','wms_wetnitratedeposition2009-2011']
@@ -259,8 +259,8 @@ var innovate_config = {
             "url": './scripts/innovate/images/1-1.png'
         }
         ,'baseMap' : ['bing','arcGisCanvasWorldLightGrayBase']
-        , 'layers': ['ROE_WetSulfateDeposition1989_1991', 'ROE_WetSulfateDeposition2011_2013', 'ROE_StateBoundaries']
-        , 'layerDisplayName': ['Wet Sulfate Deposition 1989-1991', 'Wet Sulfate Deposition 2011-2013']
+        , 'layers': ['ROE_WetSulfateDeposition1989_1991', 'ROE_WetSulfateDeposition', 'ROE_StateBoundaries']
+        , 'layerDisplayName': ['Wet Sulfate Deposition 1989-1991', 'Wet Sulfate Deposition 2014-2016']
         ,'controls':['LayerSwitcher','InnovateMapFullScreen','ScaleLine','InnovateOverlaySwitcher','Attribution','InnovateMapLegend']
          ,'overlaySwitcherRefreshDuration' : 200
          ,'overlaySwitcherLayers' : ['wms_wetsulfatedeposition1989-1991','wms_wetsulfatedeposition2009-2011']
