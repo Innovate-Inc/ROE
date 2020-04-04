@@ -26,7 +26,7 @@
       }*/
       /*.esriLegendLayer td{
         float:left;
-        
+
       }
       .esriLegendLayer {
         float:left;
@@ -121,10 +121,10 @@
 
         }*/
         #innovate_container #BasemapToggle {
-            /*position: absolute;*/
-            /*top: 10px;
-            right: 10px;*/
-            /*z-index: 40;*/
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 40;
             width: 64px;
         }
         .esriAttribution{
@@ -238,14 +238,14 @@ table.esriLegendLayer tbody tr td table tbody tr td, table.esriLegendLayerLabel 
 }
 
 /*test to adjust height of legend toggle showing too close to opacity slider*/
- #innovate_container #mframe   {
- /* .dojoxExpandoPane dijitExpandoPane dojoxExpandoBottom dijitBorderContainer-child dijitBorderContainer-dijitExpandoPane dijitBorderContainerPane dijitAlignBottom {
-	border:1px solid red;*/
-}
+ /*#innovate_container #mframe   {*/
+  /*.dojoxExpandoPane dijitExpandoPane dojoxExpandoBottom dijitBorderContainer-child dijitBorderContainer-dijitExpandoPane dijitBorderContainerPane dijitAlignBottom {*/
+	/*border:1px solid red;*/
+/*}*/
 
- /*#innovate_container #mframe {
+ #innovate_container #mframe {
 	height: 500px;
- }*/
+ }
 
 /*#innovate_container .esriPopup table {
 	display: table;
