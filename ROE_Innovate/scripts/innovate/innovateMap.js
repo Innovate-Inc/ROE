@@ -21,332 +21,346 @@ innovate.Map = function(mapID){
         //this.setMap();
         
         //Build current map
-        var mapToBuild = currentObject.config.layers[0];
-        
-        this[mapToBuild]();
-        
-        //if (mapID === 8) {
-        //    this[mapToBuild]();
-        //}
-        //else if (mapID == 1) {
-        //    this.ROE_FishFaunaPercentLoss();
-        //}
+        // var mapToBuild = currentObject.config.layers[0];
+        // this[mapToBuild]();
+
+        //this is old
+        if (mapID === 8) {
+           //this[mapToBuild]();
+        }
+        else if (mapID == 1) {
+           this.ROE_FishFaunaPercentLoss();
+        }
+    }
+
+    this.ROE_FishFaunaPercentLoss = function () {
+        require(["esri/Map", "esri/views/MapView"], function(Map, MapView) {
+  // Create a Map instance
+          var myMap = new Map({
+            basemap: 'streets'
+          });
+          // Create a MapView instance (for 2D viewing) and reference the map instance
+          var view = new MapView({
+            map: myMap,
+            container: "mapDiv" + mapID
+          });
+        });
     }
 
     //Percent reduction in native fish species diversity in the contiguous U.S.
     //Innovate Map # 1
-    this.ROE_FishFaunaPercentLoss = function () {
-        
-        var compare, compare2;
-        //alert(mapID);
-        require([
-          "esri/map",
-          "esri/layers/ArcGISDynamicMapServiceLayer",
-          "esri/layers/ImageParameters",
-          "esri/InfoTemplate",
-          "esri/layers/FeatureLayer",
-          "esri/dijit/Legend",
-          "esri/tasks/query",
-          "esri/renderers/SimpleRenderer",
-          "esri/symbols/SimpleFillSymbol",
-          "esri/symbols/SimpleLineSymbol",
-          "esri/dijit/BasemapToggle",
-          "esri/dijit/Scalebar",
-          "dojo/dom",
-          "dojo/number",
-          "dojo/on",
-          "dojo/parser",
-          "dojo/_base/array",
-          "esri/Color",
-          "dojo/string",
-          "esri/request",
-          "dojo/dom-style",
-          "dijit/form/HorizontalSlider",
-          "dijit/popup",
-          "dijit/layout/BorderContainer",
-          "dijit/layout/ContentPane",
-          "dojox/layout/ExpandoPane",
-          "dojo/domReady!"
-        ],
-          function (
-            Map, ArcGISDynamicMapServiceLayer, ImageParameters, InfoTemplate, FeatureLayer, Legend, Query, SimpleRenderer, SimpleFillSymbol,
-            SimpleLineSymbol, BasemapToggle, Scalebar, dom, number, on, parser, arrayUtils, Color, string, esriRequest, domStyle, HorizontalSlider, popup
-        ) {
-
-              //parser.parse(dom.byId("mframe" + mapID));
-              parser.parse();
-
-              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
-
-              var layer, visibleLayerIds = []; //list of visible layers
-
-              //Add map and set map properties
-              roeMapFPL = new Map("mapDiv" + mapID, {
-                  basemap: currentObject.config.baseMap[0],
-                  maxZoom: currentObject.config.endResolution,
-                  minZoom: currentObject.config.startResolution,
-                  center: currentObject.config.center,
-                  zoom: currentObject.config.defaultZoomLevel, //Defaultzoomlevel from the config file
-                  logo: false,
-                  sliderStyle: "large"
-              });
-
-              //Add Scalebar and set scalebar properties
-              var scalebar = new Scalebar({
-                  map: roeMapFPL,
-                  attachTo: "bottom-left",
-                  scalebarUnit: "dual"
-              });
-              
-              //Add Layers from map_Config
-              var imageParameters = new ImageParameters();
-              imageParameters.format = "jpeg"; //set the image type to PNG24, note default is PNG8.
-
-              //Dynamically add layers specified in the Config file//
-              //First layer in the list will be in the legend      //
-              var dynamicMapSerives = [];
-
-              //Find element that checkbox controls for visibility of layers will be appended into
-              var layersContainer = document.getElementById("layer_list" + mapID);
-
-              //Loop through layer list in the config file.
-              for (var i = 0; i < currentObject.config.layers.length; i++) {
-                  dynamicMapSerives[i] = new ArcGISDynamicMapServiceLayer(restEnd + currentObject.config.layers[i] + "/MapServer", {
-                      "opacity": 1,
-                      "imageParameters": imageParameters,
-                  });
-              }
-              //Add the layers to the map
-              roeMapFPL.addLayers(dynamicMapSerives);
-
-              //alert(currentObject.config.layers.length);
-              //For each layer in the config file add a check box for the layers visibility. The element id includes the index for the layer
-              for (var c = 0; c < currentObject.config.layers.length; c++) {
-                  $(layersContainer).append("<input type=\"checkbox\" checked=\"True\" class=\"list_item\" id=\"layer_" + c + "_" + mapID + "\" value=0 />" + currentObject.config.layerDisplayName[c] + "<br />");
-                  lyr = currentObject.config.layers[c];
-                  on(dom.byId("layer_" + c + "_" + mapID), "change", updateRadonVisibility);
-              }
-
-              ////Radio button for Map layers visibility
-              function updateRadonVisibility(evt) {
-                  evt = evt || window.event;
-                  //get the layer index from the element id
-                  var lName = evt.target.id.split("_");
-                  //If radio button is checked show Map layer
-                  if (dom.byId(evt.target.id).checked) {
-                      dynamicMapSerives[lName[1]].show();
-                  } else {
-                      dynamicMapSerives[lName[1]].hide();
-                  }
-              }
-
-
-              //Create Horizontal Legend
-              var url = restEnd + currentObject.config.legend.url + "?f=pjson";
-              //alert(currentObject.config.legend.url);
-              var requestHandle = esriRequest({
-                  "url": url,
-                  "content": {
-                      "f": "json"
-                  },
-                  "callbackParamName": "callback"
-              });
-              requestHandle.then(requestSucceeded, requestFailed);
-              function requestSucceeded(response, io) {
-                  //alert("Succeeded: " + response.layers[0]["legend"][0]["label"]);
-                  var content = "<div class=\"innvateLegend\"><div><b>" + currentObject.config.legend.layers["0"] + "</b></div><table><tbody>";
-                  var mLegend = response.layers[0]["legend"];
-                  var imgURL = "";
-                  //alert(mLegend.length);
-                  for (var i = 0; i < mLegend.length; i++) {
-                      imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/0/images/" + mLegend[i]["url"];
-                      //alert(mLegend[i]["label"]);
-                      content = content + "<td valign=\"middle\" align=\"center\"><div><img alt=\"\" src=\"" + imgURL + "\"></div></td>" +
-                          "<td valign=\"middle\" align=\"left\" style=\"padding: 3px 20px 0px 5px\">" + mLegend[i]["label"] + "</td>";
-                  }
-                  content = content + "</tbody></table></div>";
-                  //alert(content);
-                  var legendContainer = document.getElementById("legendDiv" + mapID);
-                  $(legendContainer).append(content);
-
-              }
-              function requestFailed(error, io) {
-                  alert("Failed");
-              }
-              //End Legend
-
-              var slider = new HorizontalSlider({
-                  name: "slider" + mapID,
-                  value: 1,
-                  minimum: 0,
-                  maximum: 1,
-                  intermediateChanges: true,
-                  style: "width:200px;",
-                  onChange: function (value) {
-                      //dom.byId("sliderValue").value = value;
-                      //map.getLayer(map.layerIds[1]).setOpacity(value);
-                      dynamicMapSerives[0].setOpacity(value);
-                  }
-              }, "oslider" + mapID).startup();
-
-              //Code for basemap radio buttons
-              on(dom.byId("blayerS" + mapID), "change", updateBaseMap0);
-              on(dom.byId("blayerG" + mapID), "change", updateBaseMap0);
-              //switch base map based on checked radio button
-              function updateBaseMap0() {
-                  //alert(mapID);
-                  if (dom.byId("blayerS" + mapID).checked) {
-                      roeMapFPL.setBasemap(currentObject.config.baseMap[0]);//hybrid
-                  } else {
-                      roeMapFPL.setBasemap(currentObject.config.baseMap[1]);
-                  }
-              }
-
-              //on mouse over 
-              dojo.connect(roeMapFPL, "onMouseOver", refreshMapPosition);
-              //makes sur that the map is refreshed and positioned correctly
-              function refreshMapPosition() {
-                  //alert("on Map");
-                  roeMapFPL.resize();
-                  roeMapFPL.reposition();
-              }
-
-              //May need this at some point
-              roeMapFPL.resize();
-              roeMapFPL.reposition();
-
-              //POPUPS
-              //Query and infoWindow setup
-              dojo.connect(roeMapFPL, "onClick", fishExecuteQueryTask);
-              dojo.connect(roeMapFPL.infoWindow, "onHide", function () { roeMapFPL.graphics.clear(); });
-              fishQueryTask = new esri.tasks.QueryTask(restEnd + currentObject.config.layers[0] + "/MapServer/0");
-
-              //Set query task
-              fishQuery = new esri.tasks.Query();
-              fishQuery.outSpatialReference = { "wkid": 3857 };
-              fishQuery.returnGeometry = true;
-              fishQuery.outFields = ["*"];
-
-              //Execute query
-              function fishExecuteQueryTask(evt) {
-
-                  roeMapFPL.infoWindow.hide();    //Hide Popup
-                  roeMapFPL.graphics.clear();     //Clear Graphics
-                  fishFeatureSet = null;        //Reset the Featureset
-
-                  //Find clicked location and execute query
-                  fishQuery.geometry = evt.mapPoint;
-                  fishQueryTask.execute(fishQuery, function (fset) {
-                      //alert("click radon");
-                      if (fset.features.length === 1) {
-                          fishShowFeature(fset.features[0], evt);
-                      } else if (fset.features.length !== 0) {
-                          //showFeatureSet(fset, evt);
-                      }
-                  });
-              }
-
-              //Show feature that was clicked
-              function fishShowFeature(feature, evt) {
-
-                  roeMapFPL.graphics.clear();     //Clear graphics on the map
-
-                  //set graphic symbol
-                  var symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID, new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255, 0, 0]), 2), new dojo.Color([255, 255, 255, 0]));
-                  feature.setSymbol(symbol);
-
-                  // Build text and layout for the popup
-                  var attr = feature.attributes;
-                  var title =  attr.NAME + " watershed";
-                  var content = "<div>" +"HUC code: " + attr.HUC6 + "</div>";
-                  //parseInt(attr.HISTDIVERS, 10) == 0 && parseInt(attr.ABSLOSSman, 10) == 0
-                  if ( parseInt(attr.ABSLOSSman, 10) == -1) {
-                      //fishless
-                      content += "<div>Fishless</div>";
-                  } else {
-                      content += "<div>" + (parseFloat(attr.PCTLOSS_1)).toFixed(2) + "% reduction in fish species</div>";
-                  }
-                  //Add graphics
-                  roeMapFPL.graphics.add(feature);
-                  //Set title and content for the popup window
-                  roeMapFPL.infoWindow.setTitle(title);
-                  roeMapFPL.infoWindow.setContent(content);
-
-                  (evt) ? roeMapFPL.infoWindow.show(evt.screenPoint, roeMapFPL.getInfoWindowAnchor(evt.screenPoint)) : null;
-                  roeMapFPL.infoWindow.resize(300, 120);
-              }
-          
-              
-              //find FullScreen and layer Visisbility button elements on right side of Map
-              var layerbutton = dojo.byId("expandIcon" + mapID),
-                  wipeTarget = dojo.byId("layersNode" + mapID);
-
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
-              on(layerbutton, "click", function (evt) {
-                  if (domStyle.get(wipeTarget, "display") === "none") {
-                      dojo.fx.wipeIn({ node: wipeTarget }).play();
-                      dojo.attr("exIcon" + mapID, "src", "./scripts/innovate/images/minus2.png"); //note: these paths will need to change when move servers
-                  } else {
-                      dojo.fx.wipeOut({ node: wipeTarget }).play();
-                      dojo.attr("exIcon" + mapID, "src", "./scripts/innovate/images/greenPlus2.gif"); //note: these paths will need to change when move servers
-                  }
-
-              });
-
-              //Find Full Screen button on right side of Map and connect EventHandler
-              on(dom.byId("fullScreen" + mapID), "click", fullscreenMode);
-
-              //FullScreen button EventHandler
-              function fullscreenMode() {
-
-                  //add from innovat.js
-                  var maxWidth = 1360, maxHeight = 1360
-                , screenHeight = parseInt($(window).height())
-                , screenWidth = parseInt($(window).width())
-                , width = screenWidth, height = screenHeight
-                , top = 0
-                , left = 0
-                , userConfig = innovate.getUserConfigForMap(mapID);
-                  if (screenHeight > maxHeight || screenWidth > maxWidth) {
-                      if (screenWidth > maxWidth) {
-                          width = maxWidth;
-                      } else {
-                          width = screenWidth;
-                      }
-                      if (screenHeight > maxHeight) {
-                          height = maxHeight;
-                      } else {
-                          height = screenHeight;
-                      }
-                      top = parseInt((screenHeight - height) / 2);
-                      left = parseInt((screenWidth - width) / 2);
-                  }
-                  width = width - 6;
-                  height = height - 6;
-
-                  $.blockUI({
-                      message: "<div id=\"mapPopupHeader\" style=\"cursor:pointer;height:24px;background-color:#9DB6DB;\">" +
-                              "<div style=\"float:left; padding-left:10px;\">" + userConfig["header"] + "</div>" +
-                              "<div style=\"float:right; padding-right:5px;\"><a href=\"javaScript:innovate.closeModal();\">Close</a></div>" +
-                              "</div>" +
-                              "<div>" +
-                              "<div id=\"mapPopupLoading\" style=\"position:relative; top:0px; left:0px; width:" + width + "px; height:" + height + "px; z-index:1003; margin:auto auto;  \"><div style=\"margin-top:" + Math.floor(height / 2) + "px;\"><div style=\"text-align:center; \">Loading...</div><div><img src=\"images/ajax-loader.gif\" /></div></div></div>" +
-                              "<iframe name=\"innovateFullScreenFrame\" id=\"innovateFullScreenFrame\" src=\"getMap.html?width=" + (width) + "&height=" + (height - 24) + "&mapId=" + mapID + "&exHeight=70px" + "\" frameborder=\"0\" scrolling=\"no\" width=\"" + width + "\" height=\"" + (height - 24) + "\"></iframe>" +
-                              "</div>", //note: this path will need to change when move servers
-                      css: {
-                          "position": "fixed",
-                          "width": width,
-                          "height": height,
-                          "top": top,
-                          "left": left
-                      },
-                      bindEvents: false
-                  });
-              }
-          });
-    }
+    // this.ROE_FishFaunaPercentLoss = function () {
+    //
+    //     var compare, compare2;
+    //     //alert(mapID);
+    //     require([
+    //       "esri/map",
+    //       "esri/layers/ArcGISDynamicMapServiceLayer",
+    //       "esri/layers/ImageParameters",
+    //       "esri/InfoTemplate",
+    //       "esri/layers/FeatureLayer",
+    //       "esri/dijit/Legend",
+    //       "esri/tasks/query",
+    //       "esri/renderers/SimpleRenderer",
+    //       "esri/symbols/SimpleFillSymbol",
+    //       "esri/symbols/SimpleLineSymbol",
+    //       "esri/dijit/BasemapToggle",
+    //       "esri/dijit/Scalebar",
+    //       "dojo/dom",
+    //       "dojo/number",
+    //       "dojo/on",
+    //       "dojo/parser",
+    //       "dojo/_base/array",
+    //       "esri/Color",
+    //       "dojo/string",
+    //       "esri/request",
+    //       "dojo/dom-style",
+    //       "dijit/form/HorizontalSlider",
+    //       "dijit/popup",
+    //       "dijit/layout/BorderContainer",
+    //       "dijit/layout/ContentPane",
+    //       "dojox/layout/ExpandoPane",
+    //       "dojo/domReady!"
+    //     ],
+    //       function (
+    //         Map, ArcGISDynamicMapServiceLayer, ImageParameters, InfoTemplate, FeatureLayer, Legend, Query, SimpleRenderer, SimpleFillSymbol,
+    //         SimpleLineSymbol, BasemapToggle, Scalebar, dom, number, on, parser, arrayUtils, Color, string, esriRequest, domStyle, HorizontalSlider, popup
+    //     ) {
+    //
+    //           //parser.parse(dom.byId("mframe" + mapID));
+    //           parser.parse();
+    //
+    //           var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+    //           //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+    //           //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
+    //
+    //           var layer, visibleLayerIds = []; //list of visible layers
+    //
+    //           //Add map and set map properties
+    //           roeMapFPL = new Map("mapDiv" + mapID, {
+    //               basemap: currentObject.config.baseMap[0],
+    //               maxZoom: currentObject.config.endResolution,
+    //               minZoom: currentObject.config.startResolution,
+    //               center: currentObject.config.center,
+    //               zoom: currentObject.config.defaultZoomLevel, //Defaultzoomlevel from the config file
+    //               logo: false,
+    //               sliderStyle: "large"
+    //           });
+    //
+    //           //Add Scalebar and set scalebar properties
+    //           var scalebar = new Scalebar({
+    //               map: roeMapFPL,
+    //               attachTo: "bottom-left",
+    //               scalebarUnit: "dual"
+    //           });
+    //
+    //           //Add Layers from map_Config
+    //           var imageParameters = new ImageParameters();
+    //           imageParameters.format = "jpeg"; //set the image type to PNG24, note default is PNG8.
+    //
+    //           //Dynamically add layers specified in the Config file//
+    //           //First layer in the list will be in the legend      //
+    //           var dynamicMapSerives = [];
+    //
+    //           //Find element that checkbox controls for visibility of layers will be appended into
+    //           var layersContainer = document.getElementById("layer_list" + mapID);
+    //
+    //           //Loop through layer list in the config file.
+    //           for (var i = 0; i < currentObject.config.layers.length; i++) {
+    //               dynamicMapSerives[i] = new ArcGISDynamicMapServiceLayer(restEnd + currentObject.config.layers[i] + "/MapServer", {
+    //                   "opacity": 1,
+    //                   "imageParameters": imageParameters,
+    //               });
+    //           }
+    //           //Add the layers to the map
+    //           roeMapFPL.addLayers(dynamicMapSerives);
+    //
+    //           //alert(currentObject.config.layers.length);
+    //           //For each layer in the config file add a check box for the layers visibility. The element id includes the index for the layer
+    //           for (var c = 0; c < currentObject.config.layers.length; c++) {
+    //               $(layersContainer).append("<input type=\"checkbox\" checked=\"True\" class=\"list_item\" id=\"layer_" + c + "_" + mapID + "\" value=0 />" + currentObject.config.layerDisplayName[c] + "<br />");
+    //               lyr = currentObject.config.layers[c];
+    //               on(dom.byId("layer_" + c + "_" + mapID), "change", updateRadonVisibility);
+    //           }
+    //
+    //           ////Radio button for Map layers visibility
+    //           function updateRadonVisibility(evt) {
+    //               evt = evt || window.event;
+    //               //get the layer index from the element id
+    //               var lName = evt.target.id.split("_");
+    //               //If radio button is checked show Map layer
+    //               if (dom.byId(evt.target.id).checked) {
+    //                   dynamicMapSerives[lName[1]].show();
+    //               } else {
+    //                   dynamicMapSerives[lName[1]].hide();
+    //               }
+    //           }
+    //
+    //
+    //           //Create Horizontal Legend
+    //           var url = restEnd + currentObject.config.legend.url + "?f=pjson";
+    //           //alert(currentObject.config.legend.url);
+    //           var requestHandle = esriRequest({
+    //               "url": url,
+    //               "content": {
+    //                   "f": "json"
+    //               },
+    //               "callbackParamName": "callback"
+    //           });
+    //           requestHandle.then(requestSucceeded, requestFailed);
+    //           function requestSucceeded(response, io) {
+    //               //alert("Succeeded: " + response.layers[0]["legend"][0]["label"]);
+    //               var content = "<div class=\"innvateLegend\"><div><b>" + currentObject.config.legend.layers["0"] + "</b></div><table><tbody>";
+    //               var mLegend = response.layers[0]["legend"];
+    //               var imgURL = "";
+    //               //alert(mLegend.length);
+    //               for (var i = 0; i < mLegend.length; i++) {
+    //                   imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/0/images/" + mLegend[i]["url"];
+    //                   //alert(mLegend[i]["label"]);
+    //                   content = content + "<td valign=\"middle\" align=\"center\"><div><img alt=\"\" src=\"" + imgURL + "\"></div></td>" +
+    //                       "<td valign=\"middle\" align=\"left\" style=\"padding: 3px 20px 0px 5px\">" + mLegend[i]["label"] + "</td>";
+    //               }
+    //               content = content + "</tbody></table></div>";
+    //               //alert(content);
+    //               var legendContainer = document.getElementById("legendDiv" + mapID);
+    //               $(legendContainer).append(content);
+    //
+    //           }
+    //           function requestFailed(error, io) {
+    //               alert("Failed");
+    //           }
+    //           //End Legend
+    //
+    //           var slider = new HorizontalSlider({
+    //               name: "slider" + mapID,
+    //               value: 1,
+    //               minimum: 0,
+    //               maximum: 1,
+    //               intermediateChanges: true,
+    //               style: "width:200px;",
+    //               onChange: function (value) {
+    //                   //dom.byId("sliderValue").value = value;
+    //                   //map.getLayer(map.layerIds[1]).setOpacity(value);
+    //                   dynamicMapSerives[0].setOpacity(value);
+    //               }
+    //           }, "oslider" + mapID).startup();
+    //
+    //           //Code for basemap radio buttons
+    //           on(dom.byId("blayerS" + mapID), "change", updateBaseMap0);
+    //           on(dom.byId("blayerG" + mapID), "change", updateBaseMap0);
+    //           //switch base map based on checked radio button
+    //           function updateBaseMap0() {
+    //               //alert(mapID);
+    //               if (dom.byId("blayerS" + mapID).checked) {
+    //                   roeMapFPL.setBasemap(currentObject.config.baseMap[0]);//hybrid
+    //               } else {
+    //                   roeMapFPL.setBasemap(currentObject.config.baseMap[1]);
+    //               }
+    //           }
+    //
+    //           //on mouse over
+    //           dojo.connect(roeMapFPL, "onMouseOver", refreshMapPosition);
+    //           //makes sur that the map is refreshed and positioned correctly
+    //           function refreshMapPosition() {
+    //               //alert("on Map");
+    //               roeMapFPL.resize();
+    //               roeMapFPL.reposition();
+    //           }
+    //
+    //           //May need this at some point
+    //           roeMapFPL.resize();
+    //           roeMapFPL.reposition();
+    //
+    //           //POPUPS
+    //           //Query and infoWindow setup
+    //           dojo.connect(roeMapFPL, "onClick", fishExecuteQueryTask);
+    //           dojo.connect(roeMapFPL.infoWindow, "onHide", function () { roeMapFPL.graphics.clear(); });
+    //           fishQueryTask = new esri.tasks.QueryTask(restEnd + currentObject.config.layers[0] + "/MapServer/0");
+    //
+    //           //Set query task
+    //           fishQuery = new esri.tasks.Query();
+    //           fishQuery.outSpatialReference = { "wkid": 3857 };
+    //           fishQuery.returnGeometry = true;
+    //           fishQuery.outFields = ["*"];
+    //
+    //           //Execute query
+    //           function fishExecuteQueryTask(evt) {
+    //
+    //               roeMapFPL.infoWindow.hide();    //Hide Popup
+    //               roeMapFPL.graphics.clear();     //Clear Graphics
+    //               fishFeatureSet = null;        //Reset the Featureset
+    //
+    //               //Find clicked location and execute query
+    //               fishQuery.geometry = evt.mapPoint;
+    //               fishQueryTask.execute(fishQuery, function (fset) {
+    //                   //alert("click radon");
+    //                   if (fset.features.length === 1) {
+    //                       fishShowFeature(fset.features[0], evt);
+    //                   } else if (fset.features.length !== 0) {
+    //                       //showFeatureSet(fset, evt);
+    //                   }
+    //               });
+    //           }
+    //
+    //           //Show feature that was clicked
+    //           function fishShowFeature(feature, evt) {
+    //
+    //               roeMapFPL.graphics.clear();     //Clear graphics on the map
+    //
+    //               //set graphic symbol
+    //               var symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID, new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255, 0, 0]), 2), new dojo.Color([255, 255, 255, 0]));
+    //               feature.setSymbol(symbol);
+    //
+    //               // Build text and layout for the popup
+    //               var attr = feature.attributes;
+    //               var title =  attr.NAME + " watershed";
+    //               var content = "<div>" +"HUC code: " + attr.HUC6 + "</div>";
+    //               //parseInt(attr.HISTDIVERS, 10) == 0 && parseInt(attr.ABSLOSSman, 10) == 0
+    //               if ( parseInt(attr.ABSLOSSman, 10) == -1) {
+    //                   //fishless
+    //                   content += "<div>Fishless</div>";
+    //               } else {
+    //                   content += "<div>" + (parseFloat(attr.PCTLOSS_1)).toFixed(2) + "% reduction in fish species</div>";
+    //               }
+    //               //Add graphics
+    //               roeMapFPL.graphics.add(feature);
+    //               //Set title and content for the popup window
+    //               roeMapFPL.infoWindow.setTitle(title);
+    //               roeMapFPL.infoWindow.setContent(content);
+    //
+    //               (evt) ? roeMapFPL.infoWindow.show(evt.screenPoint, roeMapFPL.getInfoWindowAnchor(evt.screenPoint)) : null;
+    //               roeMapFPL.infoWindow.resize(300, 120);
+    //           }
+    //
+    //
+    //           //find FullScreen and layer Visisbility button elements on right side of Map
+    //           var layerbutton = dojo.byId("expandIcon" + mapID),
+    //               wipeTarget = dojo.byId("layersNode" + mapID);
+    //
+    //           //assign the Eventerhandlers for FullScreen and layer Visisbility button
+    //           on(layerbutton, "click", function (evt) {
+    //               if (domStyle.get(wipeTarget, "display") === "none") {
+    //                   dojo.fx.wipeIn({ node: wipeTarget }).play();
+    //                   dojo.attr("exIcon" + mapID, "src", "./scripts/innovate/images/minus2.png"); //note: these paths will need to change when move servers
+    //               } else {
+    //                   dojo.fx.wipeOut({ node: wipeTarget }).play();
+    //                   dojo.attr("exIcon" + mapID, "src", "./scripts/innovate/images/greenPlus2.gif"); //note: these paths will need to change when move servers
+    //               }
+    //
+    //           });
+    //
+    //           //Find Full Screen button on right side of Map and connect EventHandler
+    //           on(dom.byId("fullScreen" + mapID), "click", fullscreenMode);
+    //
+    //           //FullScreen button EventHandler
+    //           function fullscreenMode() {
+    //
+    //               //add from innovat.js
+    //               var maxWidth = 1360, maxHeight = 1360
+    //             , screenHeight = parseInt($(window).height())
+    //             , screenWidth = parseInt($(window).width())
+    //             , width = screenWidth, height = screenHeight
+    //             , top = 0
+    //             , left = 0
+    //             , userConfig = innovate.getUserConfigForMap(mapID);
+    //               if (screenHeight > maxHeight || screenWidth > maxWidth) {
+    //                   if (screenWidth > maxWidth) {
+    //                       width = maxWidth;
+    //                   } else {
+    //                       width = screenWidth;
+    //                   }
+    //                   if (screenHeight > maxHeight) {
+    //                       height = maxHeight;
+    //                   } else {
+    //                       height = screenHeight;
+    //                   }
+    //                   top = parseInt((screenHeight - height) / 2);
+    //                   left = parseInt((screenWidth - width) / 2);
+    //               }
+    //               width = width - 6;
+    //               height = height - 6;
+    //
+    //               $.blockUI({
+    //                   message: "<div id=\"mapPopupHeader\" style=\"cursor:pointer;height:24px;background-color:#9DB6DB;\">" +
+    //                           "<div style=\"float:left; padding-left:10px;\">" + userConfig["header"] + "</div>" +
+    //                           "<div style=\"float:right; padding-right:5px;\"><a href=\"javaScript:innovate.closeModal();\">Close</a></div>" +
+    //                           "</div>" +
+    //                           "<div>" +
+    //                           "<div id=\"mapPopupLoading\" style=\"position:relative; top:0px; left:0px; width:" + width + "px; height:" + height + "px; z-index:1003; margin:auto auto;  \"><div style=\"margin-top:" + Math.floor(height / 2) + "px;\"><div style=\"text-align:center; \">Loading...</div><div><img src=\"images/ajax-loader.gif\" /></div></div></div>" +
+    //                           "<iframe name=\"innovateFullScreenFrame\" id=\"innovateFullScreenFrame\" src=\"getMap.html?width=" + (width) + "&height=" + (height - 24) + "&mapId=" + mapID + "&exHeight=70px" + "\" frameborder=\"0\" scrolling=\"no\" width=\"" + width + "\" height=\"" + (height - 24) + "\"></iframe>" +
+    //                           "</div>", //note: this path will need to change when move servers
+    //                   css: {
+    //                       "position": "fixed",
+    //                       "width": width,
+    //                       "height": height,
+    //                       "top": top,
+    //                       "left": left
+    //                   },
+    //                   bindEvents: false
+    //               });
+    //           }
+    //       });
+    // }
 
     //Reduction in native fish species diversity in the contiguous U.S. from historical levels to 2006
     //Innovate Map # 2
@@ -519,7 +533,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapFAL, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -576,7 +590,7 @@ innovate.Map = function(mapID){
                   var attr = feature.attributes;
                   var title = attr.NAME + " watershed"; //", " + toTitleCase(attr.StateName);
                   var content = "<div>HUC code: " + attr.HUC6 + "</div>";
-                  //parseInt(attr.HISTDIVERS, 10) == 0 && 
+                  //parseInt(attr.HISTDIVERS, 10) == 0 &&
                   if (parseInt(attr.ABSLOSSman, 10) == -1) {
                       //fishless
                       content += "<div>Fishless</div>";
@@ -599,7 +613,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -825,7 +839,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapAbsSea, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -843,7 +857,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -958,7 +972,7 @@ innovate.Map = function(mapID){
 
               var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Rest Endpoint
               //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/"; 
+              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
 
               //Add map and set map properties
               roeMapPrecip = new Map("mapDiv" + mapID, {
@@ -1070,7 +1084,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapPrecip, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -1147,7 +1161,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -1374,7 +1388,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapTemp, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -1451,7 +1465,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -1669,7 +1683,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapRel, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -1777,7 +1791,7 @@ innovate.Map = function(mapID){
                   else if (attr.Total_inch >= 8) { imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/1/images/4fae9b9bda73800e709f5403d3846b3e" }
 
                   var content = "";
-                  
+
                   var increase = "";
                   if (parseFloat(attr.Total_inch) > 0) {
                       increase = "Rising";
@@ -1806,7 +1820,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -1925,7 +1939,7 @@ innovate.Map = function(mapID){
 
               //esriConfig.defaults.geometryService = new GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
               //var layer, visibleLayerIds = []; //list of visible layers
-              
+
               //Add map and set map properties
               roeMapNLCD = new Map("mapDiv" + mapID, {
                   basemap: currentObject.config.baseMap[0], //"hybrid",  //satellite hybrid
@@ -1973,7 +1987,7 @@ innovate.Map = function(mapID){
 
               //Add the layers to the map
               roeMapNLCD.addLayers(dynamicMapSerives);
-              
+
               //alert(currentObject.config.layers.length);
               //For each layer in the config file add a check box for the layers visibility. The element id includes the index for the layer
               for (var c = 0; c < currentObject.config.layers.length; c++) {
@@ -2036,7 +2050,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapNLCD, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -2054,7 +2068,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -2123,9 +2137,9 @@ innovate.Map = function(mapID){
     //Radon Map
     //Innovate Map Number 8
     this.ROE_Radon = function () {
-        
+
         var roeMapRadon;
-     
+
         require([
           "esri/map",
           "esri/layers/ArcGISDynamicMapServiceLayer",
@@ -2160,7 +2174,7 @@ innovate.Map = function(mapID){
             Map, ArcGISDynamicMapServiceLayer, ImageParameters, InfoTemplate, FeatureLayer, Legend, Query, Extent, SimpleRenderer, SimpleFillSymbol,
             SimpleLineSymbol, BasemapToggle, Scalebar, dom, number, on, parser, arrayUtils, Color, string, esriRequest, domStyle, HorizontalSlider, popup
         ) {
-              
+
               //parser.parse(dom.byId("mframe" + mapID));
               parser.parse();
 
@@ -2194,7 +2208,7 @@ innovate.Map = function(mapID){
                   attachTo: "bottom-left",
                   scalebarUnit: "dual"
               });
-              
+
               //Add Layers from map_Config
               var imageParameters = new ImageParameters();
               imageParameters.format = "jpeg"; //set the image type to PNG24, note default is PNG8.
@@ -2202,7 +2216,7 @@ innovate.Map = function(mapID){
               //Dynamically add layers specified in the Config file//
               //First layer in the list will be in the legend      //
               var dynamicMapSerives = [];
-              
+
               //Find element that checkbox controls for visibility of layers will be appended into
               var layersContainer = document.getElementById("layer_list" + mapID);
 
@@ -2236,7 +2250,7 @@ innovate.Map = function(mapID){
                       dynamicMapSerives[lName[1]].hide();
                   }
               }
-             
+
               //Legend json request
               var url = restEnd + currentObject.config.legend.url + "?f=pjson";
               //alert(currentObject.config.legend.url);
@@ -2253,7 +2267,7 @@ innovate.Map = function(mapID){
                   var content = "";
                   //Loop through layers for the table of contents
                   content = content + "<div class=\"innvateLegend\"><div></div><table><tbody>";
-                   
+
                   //add legend componets for this layaer
                   var mLegend = response.layers[0]["legend"];
                   var imgURL = "";
@@ -2265,7 +2279,7 @@ innovate.Map = function(mapID){
                             "<td valign=\"middle\" align=\"left\" style=\"padding: 3px 5px 0px 5px\">" + mLegend[i]["label"] + "</td></tr>";
                   }
                  content = content + "</tbody></table></div>";
-                  
+
                   //Add to the legend div
                   var legendContainer = document.getElementById("legendDiv" + mapID);
                   $(legendContainer).append(content);
@@ -2314,7 +2328,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapRadon, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -2378,7 +2392,7 @@ innovate.Map = function(mapID){
                   // Build text and layout for the popup
                   var attr = feature.attributes;
                   var title = attr.NAMELSAD; // + ", " + toTitleCase(attr.StateName);
-                  var content = ""; 
+                  var content = "";
 
                   var rVal = attr.RadonZone;
                   var content = "";
@@ -2423,7 +2437,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -2488,7 +2502,7 @@ innovate.Map = function(mapID){
           });
     }
 
-    //Long Island Hypoxia 
+    //Long Island Hypoxia
     //Innovate Map #9
     this.ROE_LongIslandHypoxia = function () {
         //var baseLayerType = this.innovateLayerObj.getBaseLayerType();
@@ -2549,7 +2563,7 @@ innovate.Map = function(mapID){
                   logo: false,
                   sliderStyle: "large"
               });
-              
+
               //Add Scalebar and set scalebar properties
               var scalebar = new Scalebar({
                   map: roeMapLong,
@@ -2573,7 +2587,7 @@ innovate.Map = function(mapID){
                   dynamicMapSerives[i] = new ArcGISDynamicMapServiceLayer(restEnd + currentObject.config.layers[i] + "/MapServer", {
                       "opacity": 1,
                       "imageParameters": imageParameters,
-                  });  
+                  });
               }
               //Add the layers to the map
               roeMapLong.addLayers(dynamicMapSerives);
@@ -2584,7 +2598,7 @@ innovate.Map = function(mapID){
               //    alert(layer.name + ' ' + layer.id + ' ' + layer.opacity + ' ' + layer.visible);
               //}
               //domStyle.set("dojox_layout_ExpandoPane_1", "height", "150px");
-             
+
 
               //alert(currentObject.config.layers.length);
               //For each layer in the config file add a check box for the layers visibility. The element id includes the index for the layer
@@ -2619,7 +2633,7 @@ innovate.Map = function(mapID){
               });
               requestHandle.then(requestSucceeded, requestFailed);
               function requestSucceeded(response, io) {
-                  
+
                   var content = "";
                   //Loop through layers for the table of contents
                   for (var lIndex = 0; lIndex < 2; lIndex++) {
@@ -2644,13 +2658,13 @@ innovate.Map = function(mapID){
                   //Add to the legend div
                   var legendContainer = document.getElementById("legendDiv" + mapID);
                   $(legendContainer).append(content);
-                  
+
               }
               function requestFailed(error, io) {
                   alert("Failed");
               }
               //End Legend
-              
+
 
               var slider = new HorizontalSlider({
                   name: "slider" + mapID,
@@ -2679,7 +2693,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapLong, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -2714,7 +2728,7 @@ innovate.Map = function(mapID){
 
                 //clicked location and execute query
                 lihQuery.geometry = extentGeom;
-                //builds the extent -where user clicked 
+                //builds the extent -where user clicked
                 function pointToExtent(hMap, point, toleranceInPixel) {
                     //calculate map coords represented per pixel
                     var pixelWidth = hMap.extent.getWidth() / hMap.width;
@@ -2773,7 +2787,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -2784,15 +2798,15 @@ innovate.Map = function(mapID){
                   }
 
               });
-             
-                  
+
+
                //Find Full Screen button on right side of Map and connect EventHandler
                on(dom.byId("fullScreen" + mapID), "click", fullscreenMode);
-              
-              
+
+
               //FullScreen button EventHandler
               function fullscreenMode() {
-                 
+
                   //add from innovat.js
                   var maxWidth = 1360, maxHeight = 1360
                 , screenHeight = parseInt($(window).height())
@@ -3023,7 +3037,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapAcid, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -3045,7 +3059,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -3206,7 +3220,7 @@ innovate.Map = function(mapID){
               dynamicMapSerives[0] = new ArcGISDynamicMapServiceLayer("https://geodata.epa.gov/arcgis/rest/services/ORD/" + currentObject.config.layers[0] + "/MapServer", {
                   //"opacity": 1,
                   "imageParameters": imageParameters,
-                  
+
               });
               dynamicMapSerives[1] = new ArcGISDynamicMapServiceLayer(restEnd + currentObject.config.layers[1] + "/MapServer", {
                   //"opacity": 1,
@@ -3267,7 +3281,7 @@ innovate.Map = function(mapID){
                           background: "white",
                           color: "#64acf7"
                       });
-                      
+
                   } else {
                       //alert(lName[1]);
                       dom.byId("layer_0_" + mapID).checked = false;
@@ -3278,7 +3292,7 @@ innovate.Map = function(mapID){
                           background: "white",
                           color: "#64acf7"
                       });
-                      
+
                   }
                   domStyle.set(evt.target, {
                       background: "#64acf7",
@@ -3328,7 +3342,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapWetN, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -3346,7 +3360,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -3630,7 +3644,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapWetS, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -3648,7 +3662,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -3714,7 +3728,7 @@ innovate.Map = function(mapID){
           });
     }
 
-    //Total Nitrogen Deposition 
+    //Total Nitrogen Deposition
     //Innovate Map # 15
     this.ROE_TotalNitrogenDeposition1989_1991 = function () {
         var map, compare, compare2;
@@ -3754,7 +3768,7 @@ innovate.Map = function(mapID){
           "dojo/domReady!"
         ],
           function (
-            Map, ArcGISDynamicMapServiceLayer, ImageParameters,InfoTemplate, Popup, PopupTemplate, FeatureLayer, Legend, Query, Extent, SimpleRenderer, SimpleMarkerSymbol, GeometryService, 
+            Map, ArcGISDynamicMapServiceLayer, ImageParameters,InfoTemplate, Popup, PopupTemplate, FeatureLayer, Legend, Query, Extent, SimpleRenderer, SimpleMarkerSymbol, GeometryService,
             domConstruct, BasemapToggle, Scalebar, dom, number, on, parser, arrayUtils, Color, string, domStyle, HorizontalSlider, popup
         ) {
 
@@ -3811,7 +3825,7 @@ innovate.Map = function(mapID){
               //    //"opacity": 1,
               //    "imageParameters": imageParameters,
               //});
-              
+
               //Loop through layer list in the config file.
               //for (var i = 0; i < currentObject.config.layers.length; i++) {
               //    dynamicMapSerives[i] = new ArcGISDynamicMapServiceLayer("https://geodata.epa.gov/arcgis/rest/services/ORD/" + currentObject.config.layers[i] + "/MapServer", {
@@ -3833,7 +3847,7 @@ innovate.Map = function(mapID){
               //    lyr = currentObject.config.layers[c];
               //    on(dom.byId("layer_" + c + "_" + mapID), "change", updateVisibility);
               //}
-              
+
               ////checkboxc button for Map layers visibility
               function updateVisibility(evt) {
                   evt = evt || window.event;
@@ -3867,13 +3881,13 @@ innovate.Map = function(mapID){
               function updateNitLayer(evt) {
                   evt = evt || window.event;
                   var lName = evt.target.id.split("_");
-                  
+
                   if (lName[1] === "0") {
                       //alert(lName[1]);
                       dom.byId("layer_0_" + mapID).checked = true;
                       dom.byId("layer_1_" + mapID).checked = false;
                       dynamicMapSerives[0].show();
-                      dynamicMapSerives[1].hide();  
+                      dynamicMapSerives[1].hide();
                       domStyle.set("btn_1_" + mapID, {
                           background: "white",
                           color: "#64acf7"
@@ -3888,7 +3902,7 @@ innovate.Map = function(mapID){
                       domStyle.set("btn_0_" + mapID, {
                           background: "white",
                           color: "#64acf7"
-                      }); 
+                      });
                       queryTaskNit = new esri.tasks.QueryTask(restEnd + currentObject.config.layers[1] + "/MapServer/0");
                   }
                   domStyle.set(evt.target, {
@@ -3937,7 +3951,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapTNit, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -3958,7 +3972,7 @@ innovate.Map = function(mapID){
               dojo.connect(roeMapTNit.infoWindow, "onHide", function () { roeMapTNit.graphics.clear(); });
               //alert(restEnd + currentObject.config.layers[0] + "/MapServer/0");
               queryTaskNit = new esri.tasks.QueryTask(restEnd + currentObject.config.layers[1] + "/MapServer/0");
-              
+
               queryNit = new esri.tasks.Query();
               queryNit.outSpatialReference = { "wkid": 102100 };
               queryNit.returnGeometry = true;
@@ -3977,14 +3991,14 @@ innovate.Map = function(mapID){
 
                   var queryExtent = new esri.geometry.Extent(1, 1, tolerance, tolerance, evt.mapPoint.spatialReference);
 
-                  
+
                   queryNit.geometry = queryExtent.centerAt(pt);//evt.mapPoint;//extent;
                   //alert(evt.mapPoint.x);
                   //Execute query
                   queryTaskNit.execute(queryNit, function (fsetN) {
                       //alert(fsetN.features.length);
                       if (fsetN.features.length === 1) {
-                          
+
                           showFeature(fsetN.features[0], evt);
                       } else if (fsetN.features.length != 0) {
                           showFeature(fsetN.features[0], evt);
@@ -3998,7 +4012,7 @@ innovate.Map = function(mapID){
 
               function showFeature(feature, evt) {
                   roeMapTNit.graphics.clear();
-                  
+
                   //var symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID, new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255, 0, 0]), 2), new dojo.Color([255, 255, 255, 0]));
                   var symbol = new SimpleMarkerSymbol("circle", 32, null, new Color([0, 0, 0, 0.25]))
                   feature.setSymbol(symbol);
@@ -4011,7 +4025,7 @@ innovate.Map = function(mapID){
                   var title = "Nitrogen Deposition";
 
                   var content = "";
-                 
+
                   //alert(queryTask.url);
                   if (queryTaskNit.url == (restEnd + currentObject.config.layers[1] + "/MapServer/0")) {
                       var percent = Math.round((parseFloat(attr["DRY_NITROG"]) * 100.0) / parseFloat(attr["TOTAL_NITR"]));
@@ -4034,7 +4048,7 @@ innovate.Map = function(mapID){
                       content += "<div><span >Total : </span><span>" + feature.attributes["TOTAL_N"].toFixed(2) + " kg/ha</span></div>"
                       content += "</div>";
                   }
-                  
+
                   roeMapTNit.graphics.add(feature);
 
                   roeMapTNit.infoWindow.setTitle(title);
@@ -4049,7 +4063,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -4335,7 +4349,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapSulf, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -4440,7 +4454,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -4647,7 +4661,7 @@ innovate.Map = function(mapID){
                       //if (typeof (currentObject.config.legend.layers[lIndex]) != "undefined") {
                       //    content = content + "<div class=\"innvateLegend\"><div><b>" + currentObject.config.legend.layers[lIndex] + "</b></div><table><tbody><tr>";
                       //} else {
-                         
+
                       //}
                       //add legend componets for this layaer
                       var mLegend = response.layers[lIndex]["legend"];
@@ -4659,7 +4673,7 @@ innovate.Map = function(mapID){
                           content = content + "<td valign=\"middle\" align=\"center\"><div><img alt=\"\" src=\"" + imgURL + "\"></div></td>" +
                               "<td valign=\"middle\" align=\"left\" style=\"padding: 3px 50px 0px 5px\">" + mLegend[i]["label"] + "</td>";
                       }
-                      
+
                   }
                   content = content + "</tr></tbody></table></div>";
                   //Add to the legend div
@@ -4706,7 +4720,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapEco, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -4724,7 +4738,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -4793,7 +4807,7 @@ innovate.Map = function(mapID){
     //Gulf of Mexico Hypoxia
     //Innovate Map # 19
     this.ROE_GulfofMexicoHypoxia = function () {
-        
+
         //Add ESRI Map
         var roeMapGulf;
         var compare, compare2;
@@ -4875,7 +4889,7 @@ innovate.Map = function(mapID){
                   dynamicMapSerives[i] = new ArcGISDynamicMapServiceLayer(restEnd + currentObject.config.layers[i] + "/MapServer", {
                       //"opacity": 1,
                       "imageParameters": imageParameters,
-                  });  
+                  });
               }
               //Add the layers to the map
               roeMapGulf.addLayers(dynamicMapSerives);
@@ -4944,7 +4958,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapGulf, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -4979,7 +4993,7 @@ innovate.Map = function(mapID){
 
                   //clicked location and execute query
                   gulfQuery.geometry = extentGeom;
-                  //builds the extent -where user clicked 
+                  //builds the extent -where user clicked
                   function pointToExtent(hMap, point, toleranceInPixel) {
                       //calculate map coords represented per pixel
                       var pixelWidth = hMap.extent.getWidth() / hMap.width;
@@ -5040,7 +5054,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -5223,7 +5237,7 @@ innovate.Map = function(mapID){
                       dynamicMapSerives[lName[1]].hide();
                   }
               }
-              
+
               //Create Horizontal Legend
               var url = restEnd + currentObject.config.legend.url + "?f=pjson";
               //alert(currentObject.config.legend.url);
@@ -5236,12 +5250,12 @@ innovate.Map = function(mapID){
               });
               requestHandle.then(requestSucceeded, requestFailed);
               function requestSucceeded(response, io) {
-                  
+
                   var content = "";
                   //Loop through layers for the table of contents
                   for (var lIndex = 0; lIndex < 3; lIndex++) {
                       //Add title if specified in the config
-                      if (currentObject.config.legend.discard[lIndex] != "Y" ) { 
+                      if (currentObject.config.legend.discard[lIndex] != "Y" ) {
                           if (typeof (currentObject.config.legend.layers[lIndex]) != "undefined") {
                               content = content + "<div class=\"innvateLegend\"><div><b>" + currentObject.config.legend.layers["1"] + "</b></div><table><tbody><tr>";
                           } else {
@@ -5299,7 +5313,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapBio, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -5346,7 +5360,7 @@ innovate.Map = function(mapID){
               //Show feature that was clicked
               function showFeature(feature, evt) {
                   roeMapBio.graphics.clear();     //Clear graphics on the map
-                  
+
                     //set graphic symbol
                     var symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID, new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255, 0, 0]), 2), new dojo.Color([255, 255, 255, 0]));
                     feature.setSymbol(symbol);
@@ -5354,10 +5368,10 @@ innovate.Map = function(mapID){
                     function toTitleCase(str) {
                         return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
                     }
-                   
+
                     // Build text and layout for the popup
                     var attr = feature.attributes;
-                   
+
                     //alert(attr.Biomass_sm.toFixed(3));
                     var st = attr.ST_NAME; //attr.STATENAME;
                     var county = attr.NAME; //attr.CountyName;
@@ -5369,7 +5383,7 @@ innovate.Map = function(mapID){
                     } else{
                         content += "<div>No forest or no data</div>";
                     }
-                  
+
                   //Add graphics
                   roeMapBio.graphics.add(feature);
                   //Set title and content for the popup window
@@ -5384,7 +5398,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -5642,7 +5656,7 @@ innovate.Map = function(mapID){
                   }
               }
 
-              //on mouse over 
+              //on mouse over
               dojo.connect(roeMapCarbon, "onMouseOver", refreshMapPosition);
               //makes sur that the map is refreshed and positioned correctly
               function refreshMapPosition() {
@@ -5741,7 +5755,7 @@ innovate.Map = function(mapID){
               var layerbutton = dojo.byId("expandIcon" + mapID),
                   wipeTarget = dojo.byId("layersNode" + mapID);
 
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button  
+              //assign the Eventerhandlers for FullScreen and layer Visisbility button
               on(layerbutton, "click", function (evt) {
                   if (domStyle.get(wipeTarget, "display") === "none") {
                       dojo.fx.wipeIn({ node: wipeTarget }).play();
@@ -5804,5 +5818,5 @@ innovate.Map = function(mapID){
                   });
               }
           });
-    } 
+    }
 }
