@@ -18,9 +18,12 @@ var innovate = {
     //proxyURL : "proxy.cfm?url="
     //,
     buildMap : function(v_mapID){
-        var obj = new innovate.Map(v_mapID);
-        obj.buildMap();
-        this.openedMap[v_mapID] = obj;
+        if(v_mapID=1){
+          var obj = new innovate.Map(v_mapID);
+          obj.buildMap();
+          this.openedMap[v_mapID] = obj;
+        }
+
         
     },
     setFooter: function (v_mapID) {
@@ -77,8 +80,9 @@ var innovate = {
             //innovate_container  curParam["id"] == 8 || curParam["id"] == 15 || curParam["id"] == 9 || curParam["id"] == 17 || curParam["id"] == 10
             //height: 162px;
             //curParam["id"] == 8 || curParam["id"] == 15 || curParam["id"] == 9 || curParam["id"] == 17 || curParam["id"] == 10 || curParam["id"] == 11 || curParam["id"] == 13 || curParam["id"] == 7 || curParam["id"] == 3 || curParam["id"] == 6 || curParam["id"] == 19 || curParam["id"] == 21 || curParam["id"] == 22
-            if (curParam["id"] == 1 || curParam["id"] == 4 || curParam["id"] == 5 || curParam["id"] == 2 || curParam["id"] == 8 || curParam["id"] == 15 || curParam["id"] == 9 || curParam["id"] == 17 || curParam["id"] == 18 || curParam["id"] == 10 || curParam["id"] == 11 || curParam["id"] == 13 || curParam["id"] == 7 || curParam["id"] == 3 || curParam["id"] == 6 || curParam["id"] == 19 || curParam["id"] == 21 || curParam["id"] == 22) {
-                //alert(curParam["id"]);  
+            // if (curParam["id"] == 1 || curParam["id"] == 4 || curParam["id"] == 5 || curParam["id"] == 2 || curParam["id"] == 8 || curParam["id"] == 15 || curParam["id"] == 9 || curParam["id"] == 17 || curParam["id"] == 18 || curParam["id"] == 10 || curParam["id"] == 11 || curParam["id"] == 13 || curParam["id"] == 7 || curParam["id"] == 3 || curParam["id"] == 6 || curParam["id"] == 19 || curParam["id"] == 21 || curParam["id"] == 22) {
+            if (curParam["id"] == 1 ) {
+                //alert(curParam["id"]);
                 indx = i + 1;
                 linksHTML += "<tr><td align=\"center\"><span><a href=\"#" + indx + "\" mapID=\"" + curParam["id"] + "\"><img src=\"images/area_icon.png\" alt=\"\" width=\"30\" height=\"30\" border=\"0\" /></a></span></td><td><span class=\"thumbnailtitle\"><strong>Exhibit " + curParam["id"] + ".</strong> " + curParam["header"] + "</span></td></tr>"
                 $(mapContainer).append("<div class=\"panel onecolumn\">" +
