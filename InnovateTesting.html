@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!--The viewport meta tag is used to improve the presentation and behavior of the samples
+      on iOS devices-->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+    <title>Radon Popups</title>
+
+    <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/dojo/dijit/themes/soria/soria.css">
+    <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/dojo/dojox/layout/resources/ExpandoPane.css">
+    <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/esri/css/esri.css">
+    <link rel="stylesheet" href="scripts/innovate/innovate.css">
+
+    <script src="http://js.arcgis.com/3.9/"></script>
+    <script src="scripts/innovate/Innovate2.js"></script>
+</head>
+<body class="soria">
+    <div id="innovate_container">
+        <div id="graphs">
+            <div id="graphsInner" class="clearfix">
+                <div id="onecolumn-container">
+                    <div style="width:180px; height:600px; margin-top:10px; overflow-y:auto; float:left;">
+                        <!-- thumbnails - need to pull titles from the database -->
+                        <p id="coda-nav-1" class="coda-nav onecol" style="font-size:11px;line-height:13px;">
+                    </div><!--//thumbnails-->
+                    <div id="coda-slider-onecolumn" class="coda-slider onecolumn leftalign">
+                        <div class="panel onecolumn">
+                            <div class="panel-wrapper onecolumngraph">
+                                <div id="container-map1" class="innovate_container">
+
+                                    <!--INNOVATE STANDALONE DEMO START-->
+                                    <div id="mframe" data-dojo-type="dijit/layout/BorderContainer"
+                                         data-dojo-props="design:'headline', gutters:true">
+
+                                        <div data-dojo-type="dojox/layout/ExpandoPane"
+                                             data-dojo-props="duration:300,  region:'bottom', maxHeight:'160px', easeIn:'easing.linear', easeOut:'easing.linear'"
+                                             style="height: 160px; font-size: x-small">
+                                            <div id="slider">Opacity</div>
+                                            <div id="legendDiv"></div>
+                                        </div>
+                                        <div id="fullScreen"><img id="fullScreenIcon" src="./scripts/innovate/images/icon_fullscreen.gif" /></div>
+                                        <div id="expandIcon"><img id="exIcon" src="./scripts/innovate/images/greenPlus2.gif" style="width:14px; height:14px" /></div>
+                                        <div id="layersNode" style="display: none">
+                                            Base Layer:<span>
+                                                <br />
+                                                <input type='radio' name="blayer" id='blayer0Radio' value=0 checked="true" />Aerial Imagery<br />
+                                                <input type='radio' name="blayer" id='blayer1Radio' value=1 />World Light Gray Base
+                                            </span><br />
+                                            Overlays: <span id="layer_list">
+                                                <br />
+                                                <input type='checkbox' checked='True' class='list_item' id='layer0CheckBox' value=0 />States<br />
+                                                <input type='checkbox' checked='True' class='list_item' id='layer1CheckBox' value=1 />Radon Zones
+                                            </span><br />
+                                        </div>
+                                        <div id="mapDiv" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
+                                        </div>
+
+                                    </div>
+                                    <!--INNOVATE STANDALONE DEMO END-->
+
+                                </div>
+                                <div id="footnotes-map1" class="indicator-footnotes"></div>
+                            </div>
+                            <ul class="tools alignright">
+                                <li><a href="#" title="Get a PDF of this page"><img src="images/pdf_icon.png" id="export-ghgemissions1" width="30" height="30" alt="Get a PDF of this page" /></a></li>
+                                <li><a href="#" title="Add a statistical layer to this exhibit [No statistical information for this exhibit at this time]"><img src="images/data_icon.png" id="layer" width="30" height="30" alt="Add a statistical layer to this exhibit" /></a></li>
+                                <li><a href="#" title="View this exhibit data in Excel"><img src="images/xls_icon.png" id="excel" width="30" height="30" alt="View this exhibit data in Excel" /></a></li>
+                                <li><a href="#" title="Click here for help in using this indicator dashboard"><img src="images/help_icon.png" id="help" width="30" height="30" alt="Click here for help in using this indicator dashboard" /></a></li>
+                            </ul>
+                        </div>
+
+
+                    </div>
+                </div><!--one column container-->
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+

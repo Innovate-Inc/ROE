@@ -1,0 +1,86 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <pre>
+        Assuming in the production, "PROD_ROE" is the name of the folder holding/serving the ROE project files
+* copy folder dev/ROE/OpenLayers immediately under PROD_ROE(or any appropriate folder)
+* copy all the javascript files from the folder dev/ROE/javaScripts to appropriate location within the PROD_ROE(lets say PROD_ROE/javaScripts)
+* copy css file from the dev/ROE/css folder to appropriate location within the PROD_ROE (lets say PROD_ROE/css)
+* copy image files from the dev/ROE/images folder to appropriate location within the PROD_ROE (lets say PROD_ROE/images)
+* copy getMap.jsp and proxy.jsp immediately under PROD_ROE 
+* in the html file which has existing exhibits, add following to the head tag:
+
+&lt;link rel="stylesheet" href="css/innovate_style.css" /&gt;
+&lt;link rel="stylesheet" href="javaScripts/jquery-ui/css/ui-lightness/jquery-ui.css" /&gt;
+
+&lt;script type="text/javascript" src="javaScripts/jquery-ui/js/jquery.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="javaScripts/jquery-ui/js/jquery-ui.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="javaScripts/jquery-ui/js/jquery.blockUI.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="javaScripts/jquery-ui/js/jquery.ui.touch-punch.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="OpenLayers/lib/OpenLayers.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="OpenLayers/lib/OpenLayers/Control/InnovateMapTitle.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="OpenLayers/lib/OpenLayers/Control/InnovateMapLegend.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="OpenLayers/lib/OpenLayers/Control/InnovateMapFooter.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="OpenLayers/lib/OpenLayers/Control/InnovateMapFullScreen.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="OpenLayers/lib/OpenLayers/Control/InnovateOverlaySwitcher.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="javaScripts/map_config.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="javaScripts/innovate.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="javaScripts/innovateLayers.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="javaScripts/innovateControls.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="javaScripts/innovateMap.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="javaScripts/innovateOpacitySelector.js"&gt;&lt;/script&gt;
+
+* in the body make the following changes :
+	* embed div with id="graphs" within div with id "innovate_container", this is because we have defined most of the css under this div
+	&lt;div id="innovate_container"&gt;
+        &lt;div id="graphs"&gt;....&lt;/div&gt;
+	&lt;/div&gt;
+
+	* add coda nav links for maps as follows :
+	/* this is regular link*/&lt;span class="tab1"&gt;&lt;a href="#1"&gt;&lt;img src="images/area_icon.png" alt="" width="30" height="30" /&gt;&lt;/a&gt; &lt;span class="thumbnailtitle"&gt;&lt;strong&gt;Exhibit 1.&lt;/strong&gt; &lt;span class="exhibit_title"&gt;Greenhouse gas emissions in the U.S. by gas 1990-2009&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;
+    /* this is link for map exhibit*/&lt;span class="tab2"&gt;&lt;a href="#2"  mapID="1"&gt;&lt;img src="images/area_icon.png" alt="" width="30" height="30"  /&gt;&lt;/a&gt; &lt;span class="thumbnailtitle"&gt;&lt;strong&gt;Exhibit 2.&lt;/strong&gt; &lt;span class="exhibit_title"&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;
+    here mapID = 1 means this link will take the heading details from the javaScripts/map_config.js file which has [maps][id] = 1      
+
+	* add content as follows(in proper location corresponding to the coda nav link position for this map):
+	&lt;div class="panel onecolumn"&gt;
+		&lt;div class="panel-wrapper onecolumngraph"&gt;
+			&lt;div class="mapTitle"&gt;&lt;/div&gt;
+			&lt;div id="container-map1" class="innovate_container"&gt;&lt;/div&gt;/* map id in the nav link must match with this one*/
+			&lt;div id="footnotes-map1" class="innovate-footnotes"&gt;&lt;/div&gt;/* map id in the nav link must match with this one*/
+		&lt;/div&gt;
+		&lt;ul class="tools"&gt;
+			&lt;li&gt;&lt;a href="#" title="Get a PDF of this page"&gt;&lt;img src="images/pdf_icon.png" id="export-ghgemissions2" width="30" height="30" alt="Get a PDF of this page" /&gt;&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a href="#" title="Add a statistical layer to this exhibit [No statistical information for this exhibit at this time]"&gt;&lt;img src="images/data_icon.png" id="layer" width="30" height="30" alt="Add a statistical layer to this exhibit" /&gt;&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a href="#" title="View this exhibit data in Excel"&gt;&lt;img src="images/xls_icon.png" id="excel" width="30" height="30" alt="View this exhibit data in Excel" /&gt;&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a href="#" title="Click here for help in using this indicator dashboard"&gt;&lt;img src="images/help_icon.png" id="help" width="30" height="30" alt="Click here for help in using this indicator dashboard" /&gt;&lt;/a&gt;&lt;/li&gt;
+		&lt;/ul&gt;
+	&lt;/div&gt;	
+	
+* add this script :
+		&lt;script type="text/javascript"&gt;
+            //must be called before including functions.js
+			// or else when initial load is a map it tends to hide footer
+			//because when coda slider sets the height of the div, the content has not been set - by content I mean the footer details
+            innovate.initalizeMaps();
+        &lt;/script&gt;
+		//initalizeMaps does the task of rendering the map by using OL api
+		
+* lastly add :
+	$(document).ready(function() {
+		innovate.setMenuZindex();//correct the z-index of the ul items in menu so that the map doesnot overlap the menu	and drop down menu appears always on top of map	
+	}
+	
+	
+* Make sure the javascript and css paths in the getMap.jsp file	are pointing to the correct location 
+* Also as a demo I had taken contents from link "http://app6.erg.com/ROEsystem/public/indicator.cfm?i=41" and copied it to "dev/ROE/index.jsp" and added maps to it, so you can compare the changes that were made 
+        </pre>
+ </body>
+</html>
