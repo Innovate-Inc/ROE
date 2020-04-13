@@ -4897,675 +4897,675 @@ innovate.Map = function(mapID){
           });
     }
 
-    //Biomass Per Square Mile
-    //Innovate Map # 21
-    this.ROE_BiomassPerSquareMile = function () {
-        //Add ESRI Map
-        var roeMapBio;
-        var compare, compare2;
-        //alert(mapID);
-        require([
-          "esri/map",
-          "esri/layers/ArcGISDynamicMapServiceLayer",
-          "esri/layers/ImageParameters",
-          "esri/InfoTemplate",
-          "esri/layers/FeatureLayer",
-          "esri/dijit/Legend",
-          "esri/tasks/query",
-          "esri/geometry/Extent",
-          "esri/renderers/SimpleRenderer",
-          "esri/symbols/SimpleFillSymbol",
-          "esri/symbols/SimpleLineSymbol",
-          "esri/dijit/BasemapToggle",
-          "esri/dijit/Scalebar",
-          "dojo/dom",
-          "dojo/number",
-          "dojo/on",
-          "dojo/parser",
-          "dojo/_base/array",
-          "esri/Color",
-          "dojo/string",
-          "esri/request",
-          "dojo/dom-style",
-          "dijit/form/HorizontalSlider",
-          "dijit/popup",
-          "dijit/layout/BorderContainer",
-          "dijit/layout/ContentPane",
-          "dojox/layout/ExpandoPane",
-          "dojo/domReady!"
-        ],
-          function (
-            Map, ArcGISDynamicMapServiceLayer, ImageParameters, InfoTemplate, FeatureLayer, Legend, Query, Extent, SimpleRenderer, SimpleFillSymbol,
-            SimpleLineSymbol, BasemapToggle, Scalebar, dom, number, on, parser, arrayUtils, Color, string, esriRequest, domStyle, HorizontalSlider, popup
-        ) {
-
-              parser.parse();
-
-              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
-
-              //Add map and set map properties
-              roeMapBio = new Map("mapDiv" + mapID, {
-                  basemap: currentObject.config.baseMap[0],
-                  center: currentObject.config.center,
-                  maxZoom: currentObject.config.endResolution,
-                  minZoom: currentObject.config.startResolution,
-                  zoom: currentObject.config.defaultZoomLevel, //Defaultzoomlevel from the config file
-                  logo: false,
-                  sliderStyle: "large"
-              });
-
-              //Add Scalebar and set scalebar properties
-              var scalebar = new Scalebar({
-                  map: roeMapBio,
-                  attachTo: "bottom-right",
-                  scalebarUnit: "dual"
-              });
-
-              //Add Layers from map_Config
-              var imageParameters = new ImageParameters();
-              imageParameters.format = "jpeg"; //set the image type to PNG24, note default is PNG8.
-
-              //Dynamically add layers specified in the Config file//
-              //First layer in the list will be in the legend      //
-              var dynamicMapSerives = [];
-
-              //Find element that checkbox controls for visibility of layers will be appended into
-              var layersContainer = document.getElementById("layer_list" + mapID);
-
-              //Loop through layer list in the config file.
-              for (var i = 0; i < currentObject.config.layers.length; i++) {
-                  dynamicMapSerives[i] = new ArcGISDynamicMapServiceLayer(restEnd + currentObject.config.layers[i] + "/MapServer", {
-                      //"opacity": 1,
-                      "imageParameters": imageParameters,
-                  });
-              }
-              //Add the layers to the map
-              roeMapBio.addLayers(dynamicMapSerives);
-
-              //For each layer in the config file add a check box for the layers visibility. The element id includes the index for the layer
-              for (var c = 0; c < currentObject.config.layers.length; c++) {
-                  $(layersContainer).append("<input type=\"checkbox\" checked=\"True\" class=\"list_item\" id=\"layer_" + c + "_" + mapID + "\" value=0 />" + currentObject.config.layerDisplayName[c] + "<br />");
-                  lyr = currentObject.config.layers[c];
-                  on(dom.byId("layer_" + c + "_" + mapID), "change", updateBioVisibility);
-              }
-
-              ////Radio button for Map layers visibility
-              function updateBioVisibility(evt) {
-                  evt = evt || window.event;
-                  //get the layer index from the element id
-                  var lName = evt.target.id.split("_");
-                  //If radio button is checked show Map layer
-                  if (dom.byId(evt.target.id).checked) {
-                      dynamicMapSerives[lName[1]].show();
-                  } else {
-                      dynamicMapSerives[lName[1]].hide();
-                  }
-              }
-
-              //Create Horizontal Legend
-              var url = restEnd + currentObject.config.legend.url + "?f=pjson";
-              var requestHandle = esriRequest({
-                  "url": url,
-                  "content": {
-                      "f": "json"
-                  },
-                  "callbackParamName": "callback"
-              });
-              requestHandle.then(requestSucceeded, requestFailed);
-              function requestSucceeded(response, io) {
-
-                  var content = "";
-                  //Loop through layers for the table of contents
-                  for (var lIndex = 0; lIndex < 3; lIndex++) {
-                      //Add title if specified in the config
-                      if (currentObject.config.legend.discard[lIndex] != "Y" ) {
-                          if (typeof (currentObject.config.legend.layers[lIndex]) != "undefined") {
-                              content = content + "<div class=\"innvateLegend\"><div><b>" + currentObject.config.legend.layers["1"] + "</b></div><table><tbody><tr>";
-                          } else {
-                              content = content + "<div class=\"innvateLegend\"><div><b></b></div><table><tbody><tr>";
-                          }
-
-                          var mLegend = response.layers[lIndex]["legend"];
-                          var imgURL = "";
-
-                          for (var i = 0; i < mLegend.length; i++) {
-                              imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/" + lIndex + "/images/" + mLegend[i]["url"];
-
-                              content = content + "<td valign=\"middle\" align=\"center\"><div><img alt=\"\" src=\"" + imgURL + "\"></div></td>" +
-                                  "<td valign=\"middle\" align=\"left\" style=\"padding: 3px 70px 0px 5px\">" + mLegend[i]["label"] + "</td>";
-                          }
-                          content = content + "</tr></tbody></table></div>";
-                      }
-                  }
-                  //Add to the legend div
-                  var legendContainer = document.getElementById("legendDiv" + mapID);
-                  $(legendContainer).append(content);
-
-              }
-              function requestFailed(error, io) {
-                  alert("Failed");
-              }
-              //End Legend
-
-              var oSlider = document.getElementById(".dojoxExpandTitle");
-              var slider = new HorizontalSlider({
-                  name: "slider" + mapID,
-                  title: "Opacity",
-                  value: 1,
-                  minimum: 0,
-                  maximum: 1,
-                  intermediateChanges: true,
-                  style: "width:200px;",
-                  onChange: function (value) {
-                      dynamicMapSerives[0].setOpacity(value);
-                  }
-              }, "oslider" + mapID).startup(); //"slider" + mapID
-
-              //Code for basemap radio buttons
-              on(dom.byId("blayerS" + mapID), "change", updateBaseMap0);
-              on(dom.byId("blayerG" + mapID), "change", updateBaseMap0);
-              //switch base map based on checked radio button
-              function updateBaseMap0() {
-
-                  if (dom.byId("blayerS" + mapID).checked) {
-                      roeMapBio.setBasemap(currentObject.config.baseMap[0]);
-                  } else {
-                      roeMapBio.setBasemap(currentObject.config.baseMap[1]);
-                  }
-              }
-
-              //on mouse over
-              dojo.connect(roeMapBio, "onMouseOver", refreshMapPosition);
-              //makes sur that the map is refreshed and positioned correctly
-              function refreshMapPosition() {
-                  //alert("on Map");
-                  roeMapBio.resize();
-                  roeMapBio.reposition();
-              }
-
-              //May need this at some point
-              roeMapBio.resize();
-              roeMapBio.reposition();
-
-              //Query and infoWindow setup
-              dojo.connect(roeMapBio, "onClick", executeBioQueryTask);
-              dojo.connect(roeMapBio.infoWindow, "onHide", function () { roeMapBio.graphics.clear(); });
-              queryTaskBio = new esri.tasks.QueryTask(restEnd + currentObject.config.layers[0] + "/MapServer/1");
-              //alert("https://it.innovateteam.com/arcgis/rest/services/ROE/" + currentObject.config.layers[0] + "/MapServer/1");
-              //Set query task
-              queryBio = new esri.tasks.Query();
-              queryBio.outSpatialReference = { "wkid": 3857 };
-              queryBio.returnGeometry = true;
-              queryBio.outFields = ["*"];
-
-              //Execute query
-              function executeBioQueryTask(evt) {
-
-                  roeMapBio.infoWindow.hide();    //Hide Popup
-                  roeMapBio.graphics.clear();     //Clear Graphics
-                  featureSet = null;        //Reset the Featureset
-
-                  //Find clicked location and execute query
-                  queryBio.geometry = evt.mapPoint;
-                  queryTaskBio.execute(queryBio, function (fset) {
-                      //showFeature(fset.features[0], evt);
-                      if (fset.features.length === 1) {
-                          //this[controlName]();
-                          showFeature(fset.features[0], evt);
-                      } else if (fset.features.length !== 0) {
-                          showFeatureSet(fset, evt);
-                      }
-                  });
-              }
-
-              //Show feature that was clicked
-              function showFeature(feature, evt) {
-                  roeMapBio.graphics.clear();     //Clear graphics on the map
-
-                    //set graphic symbol
-                    var symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID, new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255, 0, 0]), 2), new dojo.Color([255, 255, 255, 0]));
-                    feature.setSymbol(symbol);
-
-                    function toTitleCase(str) {
-                        return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-                    }
-
-                    // Build text and layout for the popup
-                    var attr = feature.attributes;
-
-                    var st = attr.ST_NAME; //attr.STATENAME;
-                    var county = attr.NAME; //attr.CountyName;
-                    var title = county + ", " + st;//attr.NAMELSAD + ", " + toTitleCase(attr.StateName);
-                    var content = "";
-
-                    if (attr.Biomass_pe != null){
-                        content += "<div>" + attr.Biomass_pe.toFixed(3) + " million metric tons of forest carbon per square mile of land </div>";
-                    } else{
-                        content += "<div>No forest or no data</div>";
-                    }
-
-                  //Add graphics
-                  roeMapBio.graphics.add(feature);
-                  //Set title and content for the popup window
-                  roeMapBio.infoWindow.setTitle(title);
-                  roeMapBio.infoWindow.setContent(content);
-
-                  (evt) ? roeMapBio.infoWindow.show(evt.screenPoint, roeMapBio.getInfoWindowAnchor(evt.screenPoint)) : null;
-                  roeMapBio.infoWindow.resize(300, 120);
-              }
-
-              //find FullScreen and layer Visisbility button elements on right side of Map
-              var layerbutton = dojo.byId("expandIcon" + mapID),
-                  wipeTarget = dojo.byId("layersNode" + mapID);
-
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button
-              on(layerbutton, "click", function (evt) {
-                  if (domStyle.get(wipeTarget, "display") === "none") {
-                      dojo.fx.wipeIn({ node: wipeTarget }).play();
-                      dojo.attr("exIcon" + mapID, "src", "./scripts/innovate/images/minus2.png"); //note: these paths will need to change when move servers
-                  } else {
-                      dojo.fx.wipeOut({ node: wipeTarget }).play();
-                      dojo.attr("exIcon" + mapID, "src", "./scripts/innovate/images/greenPlus2.gif"); //note: these paths will need to change when move servers
-                  }
-
-              });
-
-              //Find Full Screen button on right side of Map and connect EventHandler
-              on(dom.byId("fullScreen" + mapID), "click", fullscreenMode);
-
-              //FullScreen button EventHandler
-              function fullscreenMode() {
-
-                  //add from innovat.js
-                  var maxWidth = 1360, maxHeight = 1360
-                , screenHeight = parseInt($(window).height())
-                , screenWidth = parseInt($(window).width())
-                , width = screenWidth, height = screenHeight
-                , top = 0
-                , left = 0
-                , userConfig = innovate.getUserConfigForMap(mapID);
-                  if (screenHeight > maxHeight || screenWidth > maxWidth) {
-                      if (screenWidth > maxWidth) {
-                          width = maxWidth;
-                      } else {
-                          width = screenWidth;
-                      }
-                      if (screenHeight > maxHeight) {
-                          height = maxHeight;
-                      } else {
-                          height = screenHeight;
-                      }
-                      top = parseInt((screenHeight - height) / 2);
-                      left = parseInt((screenWidth - width) / 2);
-                  }
-                  width = width - 6;
-                  height = height - 6;
-
-                  $.blockUI({
-                      message: "<div id=\"mapPopupHeader\" style=\"cursor:pointer;height:24px;background-color:#9DB6DB;\">" +
-                              "<div style=\"float:left; padding-left:10px;\">" + userConfig["header"] + "</div>" +
-                              "<div style=\"float:right; padding-right:5px;\"><a href=\"javaScript:innovate.closeModal();\">Close</a></div>" +
-                              "</div>" +
-                              "<div>" +
-                              "<div id=\"mapPopupLoading\" style=\"position:relative; top:0px; left:0px; width:" + width + "px; height:" + height + "px; z-index:1003; margin:auto auto;  \"><div style=\"margin-top:" + Math.floor(height / 2) + "px;\"><div style=\"text-align:center; \">Loading...</div><div><img src=\"images/ajax-loader.gif\" /></div></div></div>" +
-                              "<iframe name=\"innovateFullScreenFrame\" id=\"innovateFullScreenFrame\" src=\"getMap.html?width=" + (width) + "&height=" + (height - 24) + "&mapId=" + mapID + "&exHeight=105px" + "\" frameborder=\"0\" scrolling=\"no\" width=\"" + width + "\" height=\"" + (height - 24) + "\"></iframe>" +
-                              "</div>", //note: this path will need to change when move servers
-                      css: {
-                          "position": "fixed",
-                          "width": width,
-                          "height": height,
-                          "top": top,
-                          "left": left
-                      },
-                      bindEvents: false
-                  });
-              }
-          });
-    }
-
-    //Percent change in carbon stored in U.S. forests
-    //Innovate Map # 22
-    this.ROE_PercentChangeCarbonStorage = function () {
-        //var baseLayerType = this.innovateLayerObj.getBaseLayerType();
-        //Add ESRI Map
-        var roeMapCarbon;
-        var compare, compare2;
-        //alert(mapID);
-        require([
-          "esri/map",
-          "esri/layers/ArcGISDynamicMapServiceLayer",
-          "esri/layers/ImageParameters",
-          "esri/InfoTemplate",
-          "esri/layers/FeatureLayer",
-          "esri/dijit/Legend",
-          "esri/tasks/query",
-          "esri/geometry/Extent",
-          "esri/renderers/SimpleRenderer",
-          "esri/symbols/SimpleFillSymbol",
-          "esri/symbols/SimpleLineSymbol",
-          "esri/dijit/BasemapToggle",
-          "esri/dijit/Scalebar",
-          "dojo/dom",
-          "dojo/number",
-          "dojo/on",
-          "dojo/parser",
-          "dojo/_base/array",
-          "esri/Color",
-          "dojo/string",
-          "esri/request",
-          "dojo/dom-style",
-          "dijit/form/HorizontalSlider",
-          "dijit/popup",
-          "dijit/layout/BorderContainer",
-          "dijit/layout/ContentPane",
-          "dojox/layout/ExpandoPane",
-          "dojo/domReady!"
-        ],
-          function (
-            Map, ArcGISDynamicMapServiceLayer, ImageParameters, InfoTemplate, FeatureLayer, Legend, Query, Extent, SimpleRenderer, SimpleFillSymbol,
-            SimpleLineSymbol, BasemapToggle, Scalebar, dom, number, on, parser, arrayUtils, Color, string, esriRequest, domStyle, HorizontalSlider, popup
-        ) {
-
-              //parser.parse(dom.byId("mframe" + mapID));
-              parser.parse();
-
-              var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
-              //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
-              //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
-
-              //Add map and set map properties
-              roeMapCarbon = new Map("mapDiv" + mapID, {
-                  basemap: currentObject.config.baseMap[0],
-                  center: currentObject.config.center,
-                  maxZoom: currentObject.config.endResolution,
-                  minZoom: currentObject.config.startResolution,
-                  zoom: currentObject.config.defaultZoomLevel, //Defaultzoomlevel from the config file
-                  logo: false,
-                  sliderStyle: "large"
-              });
-
-              //Add Scalebar and set scalebar properties
-              var scalebar = new Scalebar({
-                  map: roeMapCarbon,
-                  attachTo: "bottom-right",
-                  scalebarUnit: "dual"
-              });
-
-              //Add Layers from map_Config
-              var imageParameters = new ImageParameters();
-              imageParameters.format = "jpeg"; //set the image type to PNG24, note default is PNG8.
-
-              //Dynamically add layers specified in the Config file//
-              //First layer in the list will be in the legend      //
-              var dynamicMapSerives = [];
-
-              //Find element that checkbox controls for visibility of layers will be appended into
-              var layersContainer = document.getElementById("layer_list" + mapID);
-
-              //Loop through layer list in the config file.
-              for (var i = 0; i < currentObject.config.layers.length; i++) {
-                  dynamicMapSerives[i] = new ArcGISDynamicMapServiceLayer(restEnd + currentObject.config.layers[i] + "/MapServer", {
-                      //"opacity": 1,
-                      "imageParameters": imageParameters,
-                  });
-              }
-              //Add the layers to the map
-              roeMapCarbon.addLayers(dynamicMapSerives);
-
-              //For each layer in the config file add a check box for the layers visibility. The element id includes the index for the layer
-              for (var c = 0; c < currentObject.config.layers.length; c++) {
-                  $(layersContainer).append("<input type=\"checkbox\" checked=\"True\" class=\"list_item\" id=\"layer_" + c + "_" + mapID + "\" value=0 />" + currentObject.config.layerDisplayName[c] + "<br />");
-                  lyr = currentObject.config.layers[c];
-                  on(dom.byId("layer_" + c + "_" + mapID), "change", updateCarbonVisibility);
-              }
-
-              ////Radio button for Map layers visibility
-              function updateCarbonVisibility(evt) {
-                  evt = evt || window.event;
-                  //get the layer index from the element id
-                  var lName = evt.target.id.split("_");
-                  //If radio button is checked show Map layer
-                  if (dom.byId(evt.target.id).checked) {
-                      dynamicMapSerives[lName[1]].show();
-                  } else {
-                      dynamicMapSerives[lName[1]].hide();
-                  }
-              }
-
-              //Create Horizontal Legend
-              var url = restEnd + currentObject.config.legend.url + "?f=pjson";
-
-              var requestHandle = esriRequest({
-                  "url": url,
-                  "content": {
-                      "f": "json"
-                  },
-                  "callbackParamName": "callback"
-              });
-              requestHandle.then(requestSucceeded, requestFailed);
-              function requestSucceeded(response, io) {
-
-                  var content = "";
-                  //Loop through layers for the table of contents
-                  for (var lIndex = 0; lIndex < 3; lIndex++) {
-                      //Add title if specified in the config
-                      if (currentObject.config.legend.discard[lIndex] != "Y") {
-                          if (typeof (currentObject.config.legend.layers[lIndex]) != "undefined") {
-                              content = content + "<div class=\"innvateLegend\"><div><b>" + currentObject.config.legend.layers["1"] + "</b></div><table><tbody><tr>";
-                          } else {
-                              content = content + "<div class=\"innvateLegend\"><div><b></b></div><table><tbody><tr>";
-                          }
-                          //add legend componets for this layaer
-                          var mLegend = response.layers[lIndex]["legend"];
-                          var imgURL = "";
-
-                          for (var i = 0; i < mLegend.length; i++) {
-                              imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/" + lIndex + "/images/" + mLegend[i]["url"];
-                              //alert(mLegend[i]["label"]);
-                              content = content + "<td valign=\"middle\" align=\"center\"><div><img alt=\"\" src=\"" + imgURL + "\"></div></td>" +
-                                  "<td valign=\"middle\" align=\"left\" style=\"padding: 3px 10px 0px 5px\">" + mLegend[i]["label"] + "</td>";
-                          }
-                          content = content + "</tr></tbody></table></div>";
-                      }
-                  }
-                  //Add to the legend div
-                  var legendContainer = document.getElementById("legendDiv" + mapID);
-                  $(legendContainer).append(content);
-
-              }
-              function requestFailed(error, io) {
-                  alert("Failed");
-              }
-              //End Legend
-
-              var oSlider = document.getElementById(".dojoxExpandTitle");
-              var slider = new HorizontalSlider({
-                  name: "slider" + mapID,
-                  title: "Opacity",
-                  value: 1,
-                  minimum: 0,
-                  maximum: 1,
-                  intermediateChanges: true,
-                  style: "width:200px;",
-                  onChange: function (value) {
-                      dynamicMapSerives[0].setOpacity(value);
-                  }
-              }, "oslider" + mapID).startup(); //"slider" + mapID
-
-              //Code for basemap radio buttons
-              on(dom.byId("blayerS" + mapID), "change", updateBaseMap0);
-              on(dom.byId("blayerG" + mapID), "change", updateBaseMap0);
-              //switch base map based on checked radio button
-              function updateBaseMap0() {
-                  //alert(mapID);
-                  if (dom.byId("blayerS" + mapID).checked) {
-                      roeMapCarbon.setBasemap(currentObject.config.baseMap[0]);
-                  } else {
-                      roeMapCarbon.setBasemap(currentObject.config.baseMap[1]);
-                  }
-              }
-
-              //on mouse over
-              dojo.connect(roeMapCarbon, "onMouseOver", refreshMapPosition);
-              //makes sur that the map is refreshed and positioned correctly
-              function refreshMapPosition() {
-                  //alert("on Map");
-                  roeMapCarbon.resize();
-                  roeMapCarbon.reposition();
-              }
-
-              //May need this at some point
-              roeMapCarbon.resize();
-              roeMapCarbon.reposition();
-
-              //Query and infoWindow setup
-              dojo.connect(roeMapCarbon, "onClick", executeCarbonQueryTask);
-              dojo.connect(roeMapCarbon.infoWindow, "onHide", function () { roeMapCarbon.graphics.clear(); });
-              queryTaskPct = new esri.tasks.QueryTask(restEnd + currentObject.config.layers[0] + "/MapServer/1");
-
-              //Set query task
-              queryPct = new esri.tasks.Query();
-              queryPct.outSpatialReference = { "wkid": 3857 };
-              queryPct.returnGeometry = true;
-              queryPct.outFields = ["*"];
-
-              //Execute query
-              function executeCarbonQueryTask(evt) {
-
-                  roeMapCarbon.infoWindow.hide();    //Hide Popup
-                  roeMapCarbon.graphics.clear();     //Clear Graphics
-                  featureSet = null;        //Reset the Featureset
-
-                  //Find clicked location and execute query
-                  queryPct.geometry = evt.mapPoint;
-                  queryTaskPct.execute(queryPct, function (fset) {
-                      //showFeature(fset.features[0], evt);
-                      if (fset.features.length === 1) {
-                          //this[controlName]();
-                          showFeature(fset.features[0], evt);
-                      } else if (fset.features.length !== 0) {
-                          showFeatureSet(fset, evt);
-                      }
-                  });
-              }
-
-              //Show feature that was clicked
-              function showFeature(feature, evt) {
-                  roeMapCarbon.graphics.clear();     //Clear graphics on the map
-
-                  //set graphic symbol
-                  var symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID, new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255, 0, 0]), 2), new dojo.Color([255, 255, 255, 0]));
-                  feature.setSymbol(symbol);
-
-                  function toTitleCase(str) {
-                      return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-                  }
-
-                  // Build text and layout for the popup
-                  var attr = feature.attributes;
-                  var st = attr.ST_NAME;
-                  var county = attr.NAME;
-                  var title = county + ", " + st;//attr.NAMELSAD + ", " + toTitleCase(attr.StateName);
-                  var content = "";
-                  var percentChnge = ""; //attr.PerentCh_1 ? parseFloat(attr.PerentCh_1).toFixed(2) + "%" : null;
-                  var perChnge = attr.PercentChg;
-
-                  if (perChnge === 0) {
-                      percentChnge = attr.PercentChg + "%";
-                  } else {
-                      percentChnge = attr.PercentChg ? parseFloat(attr.PercentChg).toFixed(2) + "%" : null;
-                  }
-
-                  if (percentChnge != null) {
-                      if (perChnge === 0) {
-                          content += "<div>+" + percentChnge + "</div>";
-                      } else if (percentChnge.substr(0, 1) != "-") {
-                          content += "<div>+" + percentChnge + "</div>";
-                      } else {
-                          content += "<div>" + percentChnge + "</div>";
-                      }
-                  } else {
-                      content += "<div>No forest or no data</div>";
-                  }
-
-                  //Add graphics
-                  roeMapCarbon.graphics.add(feature);
-                  //Set title and content for the popup window
-                  roeMapCarbon.infoWindow.setTitle(title);
-                  roeMapCarbon.infoWindow.setContent(content);
-
-                  (evt) ? roeMapCarbon.infoWindow.show(evt.screenPoint, roeMapCarbon.getInfoWindowAnchor(evt.screenPoint)) : null;
-                  roeMapCarbon.infoWindow.resize(300, 120);
-              }
-
-              //find FullScreen and layer Visisbility button elements on right side of Map
-              var layerbutton = dojo.byId("expandIcon" + mapID),
-                  wipeTarget = dojo.byId("layersNode" + mapID);
-
-              //assign the Eventerhandlers for FullScreen and layer Visisbility button
-              on(layerbutton, "click", function (evt) {
-                  if (domStyle.get(wipeTarget, "display") === "none") {
-                      dojo.fx.wipeIn({ node: wipeTarget }).play();
-                      dojo.attr("exIcon" + mapID, "src", "./scripts/innovate/images/minus2.png"); //note: these paths will need to change when move servers
-                  } else {
-                      dojo.fx.wipeOut({ node: wipeTarget }).play();
-                      dojo.attr("exIcon" + mapID, "src", "./scripts/innovate/images/greenPlus2.gif"); //note: these paths will need to change when move servers
-                  }
-
-              });
-
-              //Find Full Screen button on right side of Map and connect EventHandler
-              on(dom.byId("fullScreen" + mapID), "click", fullscreenMode);
-
-              //FullScreen button EventHandler
-              function fullscreenMode() {
-
-                  //add from innovat.js
-                  var maxWidth = 1360, maxHeight = 1360
-                , screenHeight = parseInt($(window).height())
-                , screenWidth = parseInt($(window).width())
-                , width = screenWidth, height = screenHeight
-                , top = 0
-                , left = 0
-                , userConfig = innovate.getUserConfigForMap(mapID);
-                  if (screenHeight > maxHeight || screenWidth > maxWidth) {
-                      if (screenWidth > maxWidth) {
-                          width = maxWidth;
-                      } else {
-                          width = screenWidth;
-                      }
-                      if (screenHeight > maxHeight) {
-                          height = maxHeight;
-                      } else {
-                          height = screenHeight;
-                      }
-                      top = parseInt((screenHeight - height) / 2);
-                      left = parseInt((screenWidth - width) / 2);
-                  }
-                  width = width - 6;
-                  height = height - 6;
-
-                  $.blockUI({
-                      message: "<div id=\"mapPopupHeader\" style=\"cursor:pointer;height:24px;background-color:#9DB6DB;\">" +
-                              "<div style=\"float:left; padding-left:10px;\">" + userConfig["header"] + "</div>" +
-                              "<div style=\"float:right; padding-right:5px;\"><a href=\"javaScript:innovate.closeModal();\">Close</a></div>" +
-                              "</div>" +
-                              "<div>" +
-                              "<div id=\"mapPopupLoading\" style=\"position:relative; top:0px; left:0px; width:" + width + "px; height:" + height + "px; z-index:1003; margin:auto auto;  \"><div style=\"margin-top:" + Math.floor(height / 2) + "px;\"><div style=\"text-align:center; \">Loading...</div><div><img src=\"images/ajax-loader.gif\" /></div></div></div>" +
-                              "<iframe name=\"innovateFullScreenFrame\" id=\"innovateFullScreenFrame\" src=\"getMap.html?width=" + (width) + "&height=" + (height - 24) + "&mapId=" + mapID + "&exHeight=105px" + "\" frameborder=\"0\" scrolling=\"no\" width=\"" + width + "\" height=\"" + (height - 24) + "\"></iframe>" +
-                              "</div>", //note: this path will need to change when move servers
-                      css: {
-                          "position": "fixed",
-                          "width": width,
-                          "height": height,
-                          "top": top,
-                          "left": left
-                      },
-                      bindEvents: false
-                  });
-              }
-          });
-    }
+    // //Biomass Per Square Mile
+    // //Innovate Map # 21
+    // this.ROE_BiomassPerSquareMile = function () {
+    //     //Add ESRI Map
+    //     var roeMapBio;
+    //     var compare, compare2;
+    //     //alert(mapID);
+    //     require([
+    //       "esri/map",
+    //       "esri/layers/ArcGISDynamicMapServiceLayer",
+    //       "esri/layers/ImageParameters",
+    //       "esri/InfoTemplate",
+    //       "esri/layers/FeatureLayer",
+    //       "esri/dijit/Legend",
+    //       "esri/tasks/query",
+    //       "esri/geometry/Extent",
+    //       "esri/renderers/SimpleRenderer",
+    //       "esri/symbols/SimpleFillSymbol",
+    //       "esri/symbols/SimpleLineSymbol",
+    //       "esri/dijit/BasemapToggle",
+    //       "esri/dijit/Scalebar",
+    //       "dojo/dom",
+    //       "dojo/number",
+    //       "dojo/on",
+    //       "dojo/parser",
+    //       "dojo/_base/array",
+    //       "esri/Color",
+    //       "dojo/string",
+    //       "esri/request",
+    //       "dojo/dom-style",
+    //       "dijit/form/HorizontalSlider",
+    //       "dijit/popup",
+    //       "dijit/layout/BorderContainer",
+    //       "dijit/layout/ContentPane",
+    //       "dojox/layout/ExpandoPane",
+    //       "dojo/domReady!"
+    //     ],
+    //       function (
+    //         Map, ArcGISDynamicMapServiceLayer, ImageParameters, InfoTemplate, FeatureLayer, Legend, Query, Extent, SimpleRenderer, SimpleFillSymbol,
+    //         SimpleLineSymbol, BasemapToggle, Scalebar, dom, number, on, parser, arrayUtils, Color, string, esriRequest, domStyle, HorizontalSlider, popup
+    //     ) {
+    //
+    //           parser.parse();
+    //
+    //           var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+    //           //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+    //           //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
+    //
+    //           //Add map and set map properties
+    //           roeMapBio = new Map("mapDiv" + mapID, {
+    //               basemap: currentObject.config.baseMap[0],
+    //               center: currentObject.config.center,
+    //               maxZoom: currentObject.config.endResolution,
+    //               minZoom: currentObject.config.startResolution,
+    //               zoom: currentObject.config.defaultZoomLevel, //Defaultzoomlevel from the config file
+    //               logo: false,
+    //               sliderStyle: "large"
+    //           });
+    //
+    //           //Add Scalebar and set scalebar properties
+    //           var scalebar = new Scalebar({
+    //               map: roeMapBio,
+    //               attachTo: "bottom-right",
+    //               scalebarUnit: "dual"
+    //           });
+    //
+    //           //Add Layers from map_Config
+    //           var imageParameters = new ImageParameters();
+    //           imageParameters.format = "jpeg"; //set the image type to PNG24, note default is PNG8.
+    //
+    //           //Dynamically add layers specified in the Config file//
+    //           //First layer in the list will be in the legend      //
+    //           var dynamicMapSerives = [];
+    //
+    //           //Find element that checkbox controls for visibility of layers will be appended into
+    //           var layersContainer = document.getElementById("layer_list" + mapID);
+    //
+    //           //Loop through layer list in the config file.
+    //           for (var i = 0; i < currentObject.config.layers.length; i++) {
+    //               dynamicMapSerives[i] = new ArcGISDynamicMapServiceLayer(restEnd + currentObject.config.layers[i] + "/MapServer", {
+    //                   //"opacity": 1,
+    //                   "imageParameters": imageParameters,
+    //               });
+    //           }
+    //           //Add the layers to the map
+    //           roeMapBio.addLayers(dynamicMapSerives);
+    //
+    //           //For each layer in the config file add a check box for the layers visibility. The element id includes the index for the layer
+    //           for (var c = 0; c < currentObject.config.layers.length; c++) {
+    //               $(layersContainer).append("<input type=\"checkbox\" checked=\"True\" class=\"list_item\" id=\"layer_" + c + "_" + mapID + "\" value=0 />" + currentObject.config.layerDisplayName[c] + "<br />");
+    //               lyr = currentObject.config.layers[c];
+    //               on(dom.byId("layer_" + c + "_" + mapID), "change", updateBioVisibility);
+    //           }
+    //
+    //           ////Radio button for Map layers visibility
+    //           function updateBioVisibility(evt) {
+    //               evt = evt || window.event;
+    //               //get the layer index from the element id
+    //               var lName = evt.target.id.split("_");
+    //               //If radio button is checked show Map layer
+    //               if (dom.byId(evt.target.id).checked) {
+    //                   dynamicMapSerives[lName[1]].show();
+    //               } else {
+    //                   dynamicMapSerives[lName[1]].hide();
+    //               }
+    //           }
+    //
+    //           //Create Horizontal Legend
+    //           var url = restEnd + currentObject.config.legend.url + "?f=pjson";
+    //           var requestHandle = esriRequest({
+    //               "url": url,
+    //               "content": {
+    //                   "f": "json"
+    //               },
+    //               "callbackParamName": "callback"
+    //           });
+    //           requestHandle.then(requestSucceeded, requestFailed);
+    //           function requestSucceeded(response, io) {
+    //
+    //               var content = "";
+    //               //Loop through layers for the table of contents
+    //               for (var lIndex = 0; lIndex < 3; lIndex++) {
+    //                   //Add title if specified in the config
+    //                   if (currentObject.config.legend.discard[lIndex] != "Y" ) {
+    //                       if (typeof (currentObject.config.legend.layers[lIndex]) != "undefined") {
+    //                           content = content + "<div class=\"innvateLegend\"><div><b>" + currentObject.config.legend.layers["1"] + "</b></div><table><tbody><tr>";
+    //                       } else {
+    //                           content = content + "<div class=\"innvateLegend\"><div><b></b></div><table><tbody><tr>";
+    //                       }
+    //
+    //                       var mLegend = response.layers[lIndex]["legend"];
+    //                       var imgURL = "";
+    //
+    //                       for (var i = 0; i < mLegend.length; i++) {
+    //                           imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/" + lIndex + "/images/" + mLegend[i]["url"];
+    //
+    //                           content = content + "<td valign=\"middle\" align=\"center\"><div><img alt=\"\" src=\"" + imgURL + "\"></div></td>" +
+    //                               "<td valign=\"middle\" align=\"left\" style=\"padding: 3px 70px 0px 5px\">" + mLegend[i]["label"] + "</td>";
+    //                       }
+    //                       content = content + "</tr></tbody></table></div>";
+    //                   }
+    //               }
+    //               //Add to the legend div
+    //               var legendContainer = document.getElementById("legendDiv" + mapID);
+    //               $(legendContainer).append(content);
+    //
+    //           }
+    //           function requestFailed(error, io) {
+    //               alert("Failed");
+    //           }
+    //           //End Legend
+    //
+    //           var oSlider = document.getElementById(".dojoxExpandTitle");
+    //           var slider = new HorizontalSlider({
+    //               name: "slider" + mapID,
+    //               title: "Opacity",
+    //               value: 1,
+    //               minimum: 0,
+    //               maximum: 1,
+    //               intermediateChanges: true,
+    //               style: "width:200px;",
+    //               onChange: function (value) {
+    //                   dynamicMapSerives[0].setOpacity(value);
+    //               }
+    //           }, "oslider" + mapID).startup(); //"slider" + mapID
+    //
+    //           //Code for basemap radio buttons
+    //           on(dom.byId("blayerS" + mapID), "change", updateBaseMap0);
+    //           on(dom.byId("blayerG" + mapID), "change", updateBaseMap0);
+    //           //switch base map based on checked radio button
+    //           function updateBaseMap0() {
+    //
+    //               if (dom.byId("blayerS" + mapID).checked) {
+    //                   roeMapBio.setBasemap(currentObject.config.baseMap[0]);
+    //               } else {
+    //                   roeMapBio.setBasemap(currentObject.config.baseMap[1]);
+    //               }
+    //           }
+    //
+    //           //on mouse over
+    //           dojo.connect(roeMapBio, "onMouseOver", refreshMapPosition);
+    //           //makes sur that the map is refreshed and positioned correctly
+    //           function refreshMapPosition() {
+    //               //alert("on Map");
+    //               roeMapBio.resize();
+    //               roeMapBio.reposition();
+    //           }
+    //
+    //           //May need this at some point
+    //           roeMapBio.resize();
+    //           roeMapBio.reposition();
+    //
+    //           //Query and infoWindow setup
+    //           dojo.connect(roeMapBio, "onClick", executeBioQueryTask);
+    //           dojo.connect(roeMapBio.infoWindow, "onHide", function () { roeMapBio.graphics.clear(); });
+    //           queryTaskBio = new esri.tasks.QueryTask(restEnd + currentObject.config.layers[0] + "/MapServer/1");
+    //           //alert("https://it.innovateteam.com/arcgis/rest/services/ROE/" + currentObject.config.layers[0] + "/MapServer/1");
+    //           //Set query task
+    //           queryBio = new esri.tasks.Query();
+    //           queryBio.outSpatialReference = { "wkid": 3857 };
+    //           queryBio.returnGeometry = true;
+    //           queryBio.outFields = ["*"];
+    //
+    //           //Execute query
+    //           function executeBioQueryTask(evt) {
+    //
+    //               roeMapBio.infoWindow.hide();    //Hide Popup
+    //               roeMapBio.graphics.clear();     //Clear Graphics
+    //               featureSet = null;        //Reset the Featureset
+    //
+    //               //Find clicked location and execute query
+    //               queryBio.geometry = evt.mapPoint;
+    //               queryTaskBio.execute(queryBio, function (fset) {
+    //                   //showFeature(fset.features[0], evt);
+    //                   if (fset.features.length === 1) {
+    //                       //this[controlName]();
+    //                       showFeature(fset.features[0], evt);
+    //                   } else if (fset.features.length !== 0) {
+    //                       showFeatureSet(fset, evt);
+    //                   }
+    //               });
+    //           }
+    //
+    //           //Show feature that was clicked
+    //           function showFeature(feature, evt) {
+    //               roeMapBio.graphics.clear();     //Clear graphics on the map
+    //
+    //                 //set graphic symbol
+    //                 var symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID, new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255, 0, 0]), 2), new dojo.Color([255, 255, 255, 0]));
+    //                 feature.setSymbol(symbol);
+    //
+    //                 function toTitleCase(str) {
+    //                     return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+    //                 }
+    //
+    //                 // Build text and layout for the popup
+    //                 var attr = feature.attributes;
+    //
+    //                 var st = attr.ST_NAME; //attr.STATENAME;
+    //                 var county = attr.NAME; //attr.CountyName;
+    //                 var title = county + ", " + st;//attr.NAMELSAD + ", " + toTitleCase(attr.StateName);
+    //                 var content = "";
+    //
+    //                 if (attr.Biomass_pe != null){
+    //                     content += "<div>" + attr.Biomass_pe.toFixed(3) + " million metric tons of forest carbon per square mile of land </div>";
+    //                 } else{
+    //                     content += "<div>No forest or no data</div>";
+    //                 }
+    //
+    //               //Add graphics
+    //               roeMapBio.graphics.add(feature);
+    //               //Set title and content for the popup window
+    //               roeMapBio.infoWindow.setTitle(title);
+    //               roeMapBio.infoWindow.setContent(content);
+    //
+    //               (evt) ? roeMapBio.infoWindow.show(evt.screenPoint, roeMapBio.getInfoWindowAnchor(evt.screenPoint)) : null;
+    //               roeMapBio.infoWindow.resize(300, 120);
+    //           }
+    //
+    //           //find FullScreen and layer Visisbility button elements on right side of Map
+    //           var layerbutton = dojo.byId("expandIcon" + mapID),
+    //               wipeTarget = dojo.byId("layersNode" + mapID);
+    //
+    //           //assign the Eventerhandlers for FullScreen and layer Visisbility button
+    //           on(layerbutton, "click", function (evt) {
+    //               if (domStyle.get(wipeTarget, "display") === "none") {
+    //                   dojo.fx.wipeIn({ node: wipeTarget }).play();
+    //                   dojo.attr("exIcon" + mapID, "src", "./scripts/innovate/images/minus2.png"); //note: these paths will need to change when move servers
+    //               } else {
+    //                   dojo.fx.wipeOut({ node: wipeTarget }).play();
+    //                   dojo.attr("exIcon" + mapID, "src", "./scripts/innovate/images/greenPlus2.gif"); //note: these paths will need to change when move servers
+    //               }
+    //
+    //           });
+    //
+    //           //Find Full Screen button on right side of Map and connect EventHandler
+    //           on(dom.byId("fullScreen" + mapID), "click", fullscreenMode);
+    //
+    //           //FullScreen button EventHandler
+    //           function fullscreenMode() {
+    //
+    //               //add from innovat.js
+    //               var maxWidth = 1360, maxHeight = 1360
+    //             , screenHeight = parseInt($(window).height())
+    //             , screenWidth = parseInt($(window).width())
+    //             , width = screenWidth, height = screenHeight
+    //             , top = 0
+    //             , left = 0
+    //             , userConfig = innovate.getUserConfigForMap(mapID);
+    //               if (screenHeight > maxHeight || screenWidth > maxWidth) {
+    //                   if (screenWidth > maxWidth) {
+    //                       width = maxWidth;
+    //                   } else {
+    //                       width = screenWidth;
+    //                   }
+    //                   if (screenHeight > maxHeight) {
+    //                       height = maxHeight;
+    //                   } else {
+    //                       height = screenHeight;
+    //                   }
+    //                   top = parseInt((screenHeight - height) / 2);
+    //                   left = parseInt((screenWidth - width) / 2);
+    //               }
+    //               width = width - 6;
+    //               height = height - 6;
+    //
+    //               $.blockUI({
+    //                   message: "<div id=\"mapPopupHeader\" style=\"cursor:pointer;height:24px;background-color:#9DB6DB;\">" +
+    //                           "<div style=\"float:left; padding-left:10px;\">" + userConfig["header"] + "</div>" +
+    //                           "<div style=\"float:right; padding-right:5px;\"><a href=\"javaScript:innovate.closeModal();\">Close</a></div>" +
+    //                           "</div>" +
+    //                           "<div>" +
+    //                           "<div id=\"mapPopupLoading\" style=\"position:relative; top:0px; left:0px; width:" + width + "px; height:" + height + "px; z-index:1003; margin:auto auto;  \"><div style=\"margin-top:" + Math.floor(height / 2) + "px;\"><div style=\"text-align:center; \">Loading...</div><div><img src=\"images/ajax-loader.gif\" /></div></div></div>" +
+    //                           "<iframe name=\"innovateFullScreenFrame\" id=\"innovateFullScreenFrame\" src=\"getMap.html?width=" + (width) + "&height=" + (height - 24) + "&mapId=" + mapID + "&exHeight=105px" + "\" frameborder=\"0\" scrolling=\"no\" width=\"" + width + "\" height=\"" + (height - 24) + "\"></iframe>" +
+    //                           "</div>", //note: this path will need to change when move servers
+    //                   css: {
+    //                       "position": "fixed",
+    //                       "width": width,
+    //                       "height": height,
+    //                       "top": top,
+    //                       "left": left
+    //                   },
+    //                   bindEvents: false
+    //               });
+    //           }
+    //       });
+    // }
+
+    // //Percent change in carbon stored in U.S. forests
+    // //Innovate Map # 22
+    // this.ROE_PercentChangeCarbonStorage = function () {
+    //     //var baseLayerType = this.innovateLayerObj.getBaseLayerType();
+    //     //Add ESRI Map
+    //     var roeMapCarbon;
+    //     var compare, compare2;
+    //     //alert(mapID);
+    //     require([
+    //       "esri/map",
+    //       "esri/layers/ArcGISDynamicMapServiceLayer",
+    //       "esri/layers/ImageParameters",
+    //       "esri/InfoTemplate",
+    //       "esri/layers/FeatureLayer",
+    //       "esri/dijit/Legend",
+    //       "esri/tasks/query",
+    //       "esri/geometry/Extent",
+    //       "esri/renderers/SimpleRenderer",
+    //       "esri/symbols/SimpleFillSymbol",
+    //       "esri/symbols/SimpleLineSymbol",
+    //       "esri/dijit/BasemapToggle",
+    //       "esri/dijit/Scalebar",
+    //       "dojo/dom",
+    //       "dojo/number",
+    //       "dojo/on",
+    //       "dojo/parser",
+    //       "dojo/_base/array",
+    //       "esri/Color",
+    //       "dojo/string",
+    //       "esri/request",
+    //       "dojo/dom-style",
+    //       "dijit/form/HorizontalSlider",
+    //       "dijit/popup",
+    //       "dijit/layout/BorderContainer",
+    //       "dijit/layout/ContentPane",
+    //       "dojox/layout/ExpandoPane",
+    //       "dojo/domReady!"
+    //     ],
+    //       function (
+    //         Map, ArcGISDynamicMapServiceLayer, ImageParameters, InfoTemplate, FeatureLayer, Legend, Query, Extent, SimpleRenderer, SimpleFillSymbol,
+    //         SimpleLineSymbol, BasemapToggle, Scalebar, dom, number, on, parser, arrayUtils, Color, string, esriRequest, domStyle, HorizontalSlider, popup
+    //     ) {
+    //
+    //           //parser.parse(dom.byId("mframe" + mapID));
+    //           parser.parse();
+    //
+    //           var restEnd = "https://geodata.epa.gov/arcgis/rest/services/ORD/"; //EPA Production Rest Endpoint
+    //           //var restEnd = "https://gisstg.rtpnc.epa.gov/arcgis/rest/services/ord/"; //EPA Staging Rest Endpoint
+    //           //var restEnd = "https://it.innovateteam.com/arcgis/rest/services/ROE/";
+    //
+    //           //Add map and set map properties
+    //           roeMapCarbon = new Map("mapDiv" + mapID, {
+    //               basemap: currentObject.config.baseMap[0],
+    //               center: currentObject.config.center,
+    //               maxZoom: currentObject.config.endResolution,
+    //               minZoom: currentObject.config.startResolution,
+    //               zoom: currentObject.config.defaultZoomLevel, //Defaultzoomlevel from the config file
+    //               logo: false,
+    //               sliderStyle: "large"
+    //           });
+    //
+    //           //Add Scalebar and set scalebar properties
+    //           var scalebar = new Scalebar({
+    //               map: roeMapCarbon,
+    //               attachTo: "bottom-right",
+    //               scalebarUnit: "dual"
+    //           });
+    //
+    //           //Add Layers from map_Config
+    //           var imageParameters = new ImageParameters();
+    //           imageParameters.format = "jpeg"; //set the image type to PNG24, note default is PNG8.
+    //
+    //           //Dynamically add layers specified in the Config file//
+    //           //First layer in the list will be in the legend      //
+    //           var dynamicMapSerives = [];
+    //
+    //           //Find element that checkbox controls for visibility of layers will be appended into
+    //           var layersContainer = document.getElementById("layer_list" + mapID);
+    //
+    //           //Loop through layer list in the config file.
+    //           for (var i = 0; i < currentObject.config.layers.length; i++) {
+    //               dynamicMapSerives[i] = new ArcGISDynamicMapServiceLayer(restEnd + currentObject.config.layers[i] + "/MapServer", {
+    //                   //"opacity": 1,
+    //                   "imageParameters": imageParameters,
+    //               });
+    //           }
+    //           //Add the layers to the map
+    //           roeMapCarbon.addLayers(dynamicMapSerives);
+    //
+    //           //For each layer in the config file add a check box for the layers visibility. The element id includes the index for the layer
+    //           for (var c = 0; c < currentObject.config.layers.length; c++) {
+    //               $(layersContainer).append("<input type=\"checkbox\" checked=\"True\" class=\"list_item\" id=\"layer_" + c + "_" + mapID + "\" value=0 />" + currentObject.config.layerDisplayName[c] + "<br />");
+    //               lyr = currentObject.config.layers[c];
+    //               on(dom.byId("layer_" + c + "_" + mapID), "change", updateCarbonVisibility);
+    //           }
+    //
+    //           ////Radio button for Map layers visibility
+    //           function updateCarbonVisibility(evt) {
+    //               evt = evt || window.event;
+    //               //get the layer index from the element id
+    //               var lName = evt.target.id.split("_");
+    //               //If radio button is checked show Map layer
+    //               if (dom.byId(evt.target.id).checked) {
+    //                   dynamicMapSerives[lName[1]].show();
+    //               } else {
+    //                   dynamicMapSerives[lName[1]].hide();
+    //               }
+    //           }
+    //
+    //           //Create Horizontal Legend
+    //           var url = restEnd + currentObject.config.legend.url + "?f=pjson";
+    //
+    //           var requestHandle = esriRequest({
+    //               "url": url,
+    //               "content": {
+    //                   "f": "json"
+    //               },
+    //               "callbackParamName": "callback"
+    //           });
+    //           requestHandle.then(requestSucceeded, requestFailed);
+    //           function requestSucceeded(response, io) {
+    //
+    //               var content = "";
+    //               //Loop through layers for the table of contents
+    //               for (var lIndex = 0; lIndex < 3; lIndex++) {
+    //                   //Add title if specified in the config
+    //                   if (currentObject.config.legend.discard[lIndex] != "Y") {
+    //                       if (typeof (currentObject.config.legend.layers[lIndex]) != "undefined") {
+    //                           content = content + "<div class=\"innvateLegend\"><div><b>" + currentObject.config.legend.layers["1"] + "</b></div><table><tbody><tr>";
+    //                       } else {
+    //                           content = content + "<div class=\"innvateLegend\"><div><b></b></div><table><tbody><tr>";
+    //                       }
+    //                       //add legend componets for this layaer
+    //                       var mLegend = response.layers[lIndex]["legend"];
+    //                       var imgURL = "";
+    //
+    //                       for (var i = 0; i < mLegend.length; i++) {
+    //                           imgURL = restEnd + currentObject.config.layers[0] + "/MapServer/" + lIndex + "/images/" + mLegend[i]["url"];
+    //                           //alert(mLegend[i]["label"]);
+    //                           content = content + "<td valign=\"middle\" align=\"center\"><div><img alt=\"\" src=\"" + imgURL + "\"></div></td>" +
+    //                               "<td valign=\"middle\" align=\"left\" style=\"padding: 3px 10px 0px 5px\">" + mLegend[i]["label"] + "</td>";
+    //                       }
+    //                       content = content + "</tr></tbody></table></div>";
+    //                   }
+    //               }
+    //               //Add to the legend div
+    //               var legendContainer = document.getElementById("legendDiv" + mapID);
+    //               $(legendContainer).append(content);
+    //
+    //           }
+    //           function requestFailed(error, io) {
+    //               alert("Failed");
+    //           }
+    //           //End Legend
+    //
+    //           var oSlider = document.getElementById(".dojoxExpandTitle");
+    //           var slider = new HorizontalSlider({
+    //               name: "slider" + mapID,
+    //               title: "Opacity",
+    //               value: 1,
+    //               minimum: 0,
+    //               maximum: 1,
+    //               intermediateChanges: true,
+    //               style: "width:200px;",
+    //               onChange: function (value) {
+    //                   dynamicMapSerives[0].setOpacity(value);
+    //               }
+    //           }, "oslider" + mapID).startup(); //"slider" + mapID
+    //
+    //           //Code for basemap radio buttons
+    //           on(dom.byId("blayerS" + mapID), "change", updateBaseMap0);
+    //           on(dom.byId("blayerG" + mapID), "change", updateBaseMap0);
+    //           //switch base map based on checked radio button
+    //           function updateBaseMap0() {
+    //               //alert(mapID);
+    //               if (dom.byId("blayerS" + mapID).checked) {
+    //                   roeMapCarbon.setBasemap(currentObject.config.baseMap[0]);
+    //               } else {
+    //                   roeMapCarbon.setBasemap(currentObject.config.baseMap[1]);
+    //               }
+    //           }
+    //
+    //           //on mouse over
+    //           dojo.connect(roeMapCarbon, "onMouseOver", refreshMapPosition);
+    //           //makes sur that the map is refreshed and positioned correctly
+    //           function refreshMapPosition() {
+    //               //alert("on Map");
+    //               roeMapCarbon.resize();
+    //               roeMapCarbon.reposition();
+    //           }
+    //
+    //           //May need this at some point
+    //           roeMapCarbon.resize();
+    //           roeMapCarbon.reposition();
+    //
+    //           //Query and infoWindow setup
+    //           dojo.connect(roeMapCarbon, "onClick", executeCarbonQueryTask);
+    //           dojo.connect(roeMapCarbon.infoWindow, "onHide", function () { roeMapCarbon.graphics.clear(); });
+    //           queryTaskPct = new esri.tasks.QueryTask(restEnd + currentObject.config.layers[0] + "/MapServer/1");
+    //
+    //           //Set query task
+    //           queryPct = new esri.tasks.Query();
+    //           queryPct.outSpatialReference = { "wkid": 3857 };
+    //           queryPct.returnGeometry = true;
+    //           queryPct.outFields = ["*"];
+    //
+    //           //Execute query
+    //           function executeCarbonQueryTask(evt) {
+    //
+    //               roeMapCarbon.infoWindow.hide();    //Hide Popup
+    //               roeMapCarbon.graphics.clear();     //Clear Graphics
+    //               featureSet = null;        //Reset the Featureset
+    //
+    //               //Find clicked location and execute query
+    //               queryPct.geometry = evt.mapPoint;
+    //               queryTaskPct.execute(queryPct, function (fset) {
+    //                   //showFeature(fset.features[0], evt);
+    //                   if (fset.features.length === 1) {
+    //                       //this[controlName]();
+    //                       showFeature(fset.features[0], evt);
+    //                   } else if (fset.features.length !== 0) {
+    //                       showFeatureSet(fset, evt);
+    //                   }
+    //               });
+    //           }
+    //
+    //           //Show feature that was clicked
+    //           function showFeature(feature, evt) {
+    //               roeMapCarbon.graphics.clear();     //Clear graphics on the map
+    //
+    //               //set graphic symbol
+    //               var symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID, new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255, 0, 0]), 2), new dojo.Color([255, 255, 255, 0]));
+    //               feature.setSymbol(symbol);
+    //
+    //               function toTitleCase(str) {
+    //                   return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+    //               }
+    //
+    //               // Build text and layout for the popup
+    //               var attr = feature.attributes;
+    //               var st = attr.ST_NAME;
+    //               var county = attr.NAME;
+    //               var title = county + ", " + st;//attr.NAMELSAD + ", " + toTitleCase(attr.StateName);
+    //               var content = "";
+    //               var percentChnge = ""; //attr.PerentCh_1 ? parseFloat(attr.PerentCh_1).toFixed(2) + "%" : null;
+    //               var perChnge = attr.PercentChg;
+    //
+    //               if (perChnge === 0) {
+    //                   percentChnge = attr.PercentChg + "%";
+    //               } else {
+    //                   percentChnge = attr.PercentChg ? parseFloat(attr.PercentChg).toFixed(2) + "%" : null;
+    //               }
+    //
+    //               if (percentChnge != null) {
+    //                   if (perChnge === 0) {
+    //                       content += "<div>+" + percentChnge + "</div>";
+    //                   } else if (percentChnge.substr(0, 1) != "-") {
+    //                       content += "<div>+" + percentChnge + "</div>";
+    //                   } else {
+    //                       content += "<div>" + percentChnge + "</div>";
+    //                   }
+    //               } else {
+    //                   content += "<div>No forest or no data</div>";
+    //               }
+    //
+    //               //Add graphics
+    //               roeMapCarbon.graphics.add(feature);
+    //               //Set title and content for the popup window
+    //               roeMapCarbon.infoWindow.setTitle(title);
+    //               roeMapCarbon.infoWindow.setContent(content);
+    //
+    //               (evt) ? roeMapCarbon.infoWindow.show(evt.screenPoint, roeMapCarbon.getInfoWindowAnchor(evt.screenPoint)) : null;
+    //               roeMapCarbon.infoWindow.resize(300, 120);
+    //           }
+    //
+    //           //find FullScreen and layer Visisbility button elements on right side of Map
+    //           var layerbutton = dojo.byId("expandIcon" + mapID),
+    //               wipeTarget = dojo.byId("layersNode" + mapID);
+    //
+    //           //assign the Eventerhandlers for FullScreen and layer Visisbility button
+    //           on(layerbutton, "click", function (evt) {
+    //               if (domStyle.get(wipeTarget, "display") === "none") {
+    //                   dojo.fx.wipeIn({ node: wipeTarget }).play();
+    //                   dojo.attr("exIcon" + mapID, "src", "./scripts/innovate/images/minus2.png"); //note: these paths will need to change when move servers
+    //               } else {
+    //                   dojo.fx.wipeOut({ node: wipeTarget }).play();
+    //                   dojo.attr("exIcon" + mapID, "src", "./scripts/innovate/images/greenPlus2.gif"); //note: these paths will need to change when move servers
+    //               }
+    //
+    //           });
+    //
+    //           //Find Full Screen button on right side of Map and connect EventHandler
+    //           on(dom.byId("fullScreen" + mapID), "click", fullscreenMode);
+    //
+    //           //FullScreen button EventHandler
+    //           function fullscreenMode() {
+    //
+    //               //add from innovat.js
+    //               var maxWidth = 1360, maxHeight = 1360
+    //             , screenHeight = parseInt($(window).height())
+    //             , screenWidth = parseInt($(window).width())
+    //             , width = screenWidth, height = screenHeight
+    //             , top = 0
+    //             , left = 0
+    //             , userConfig = innovate.getUserConfigForMap(mapID);
+    //               if (screenHeight > maxHeight || screenWidth > maxWidth) {
+    //                   if (screenWidth > maxWidth) {
+    //                       width = maxWidth;
+    //                   } else {
+    //                       width = screenWidth;
+    //                   }
+    //                   if (screenHeight > maxHeight) {
+    //                       height = maxHeight;
+    //                   } else {
+    //                       height = screenHeight;
+    //                   }
+    //                   top = parseInt((screenHeight - height) / 2);
+    //                   left = parseInt((screenWidth - width) / 2);
+    //               }
+    //               width = width - 6;
+    //               height = height - 6;
+    //
+    //               $.blockUI({
+    //                   message: "<div id=\"mapPopupHeader\" style=\"cursor:pointer;height:24px;background-color:#9DB6DB;\">" +
+    //                           "<div style=\"float:left; padding-left:10px;\">" + userConfig["header"] + "</div>" +
+    //                           "<div style=\"float:right; padding-right:5px;\"><a href=\"javaScript:innovate.closeModal();\">Close</a></div>" +
+    //                           "</div>" +
+    //                           "<div>" +
+    //                           "<div id=\"mapPopupLoading\" style=\"position:relative; top:0px; left:0px; width:" + width + "px; height:" + height + "px; z-index:1003; margin:auto auto;  \"><div style=\"margin-top:" + Math.floor(height / 2) + "px;\"><div style=\"text-align:center; \">Loading...</div><div><img src=\"images/ajax-loader.gif\" /></div></div></div>" +
+    //                           "<iframe name=\"innovateFullScreenFrame\" id=\"innovateFullScreenFrame\" src=\"getMap.html?width=" + (width) + "&height=" + (height - 24) + "&mapId=" + mapID + "&exHeight=105px" + "\" frameborder=\"0\" scrolling=\"no\" width=\"" + width + "\" height=\"" + (height - 24) + "\"></iframe>" +
+    //                           "</div>", //note: this path will need to change when move servers
+    //                   css: {
+    //                       "position": "fixed",
+    //                       "width": width,
+    //                       "height": height,
+    //                       "top": top,
+    //                       "left": left
+    //                   },
+    //                   bindEvents: false
+    //               });
+    //           }
+    //       });
+    // }
 }
